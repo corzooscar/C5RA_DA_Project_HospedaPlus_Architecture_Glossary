@@ -1,0 +1,1 @@
+# C5RA_DA_Project_HospedaPlus_Arquitecture_Glossary
