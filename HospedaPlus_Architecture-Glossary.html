@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HospedaPlus Revenue: Glosario Visual de Arquitectura</title>
+    <title>HospedaPlus Revenue: Glosario Visual de Arquitectura y Requerimientos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -17,6 +17,10 @@
             --card-bg: #ffffff;
             --text: #2c3e50;
             --text-light: #7f8c8d;
+            --req-bg: #eaf2f8;
+            --req-text: #2980b9;
+            --topic-bg: #fef9e7;
+            --topic-text: #b7950b;
         }
 
         body {
@@ -28,25 +32,27 @@
             padding: 20px;
         }
 
-        h1 {
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 1.1em; }
+        
+        .project-badge {
+            display: block;
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .subtitle {
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 40px;
-            font-size: 1.1em;
-        }
-
-        .layer-section {
-            margin-bottom: 50px;
-        }
+        .layer-section { margin-bottom: 40px; }
 
         .layer-title {
-            font-size: 1.5em;
+            font-size: 1.4em;
             padding-bottom: 10px;
             border-bottom: 3px solid #ddd;
             margin-bottom: 20px;
@@ -55,11 +61,8 @@
             gap: 10px;
         }
 
-        .layer-title i {
-            font-size: 1.2em;
-        }
+        .layer-title i { font-size: 1.2em; }
 
-        /* Colores por capa */
         .layer-1 .layer-title { border-color: var(--orange); color: var(--orange); }
         .layer-2 .layer-title { border-color: var(--teal); color: var(--teal); }
         .layer-3 .layer-title { border-color: var(--yellow); color: #d4ac0d; }
@@ -69,7 +72,7 @@
 
         .glossary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 20px;
         }
 
@@ -84,11 +87,7 @@
             flex-direction: column;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
-        }
-
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 12px rgba(0,0,0,0.1); }
         .layer-1 .card { border-top-color: var(--orange); }
         .layer-2 .card { border-top-color: var(--teal); }
         .layer-3 .card { border-top-color: var(--yellow); }
@@ -124,47 +123,30 @@
         .layer-5 .card-icon { background-color: var(--blue); }
         .layer-6 .card-icon { background-color: var(--red); }
 
-        .card-title {
-            margin: 0;
-            font-size: 1.1em;
-            color: #2c3e50;
-        }
+        .card-title { margin: 0; font-size: 1.1em; color: #2c3e50; }
+        .card-subtitle { font-size: 0.8em; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .card-subtitle {
-            font-size: 0.8em;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .card-body { padding: 20px; flex-grow: 1; font-size: 0.95em; }
+        .card-body p { margin-top: 0; margin-bottom: 12px; }
+        .card-body strong { color: #2c3e50; }
 
-        .card-body {
-            padding: 20px;
-            flex-grow: 1;
-            font-size: 0.95em;
-        }
-
-        .card-body p {
-            margin-top: 0;
-            margin-bottom: 12px;
-        }
-
-        .card-body strong {
-            color: #2c3e50;
-        }
-
-        .tag {
+        .tag-group { margin-bottom: 12px; }
+        
+        .badge {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.75em;
             font-weight: bold;
             margin-right: 5px;
             margin-bottom: 5px;
+            line-height: 1.2;
         }
 
-        .tag-importance { background-color: #e8f8f5; color: #117864; }
-        .tag-complexity { background-color: #fef9e7; color: #b7950b; }
-        .tag-alt { background-color: #f4ecf7; color: #6c3483; }
+        .badge-req { background-color: var(--req-bg); color: var(--req-text); border: 1px solid #d4e6f1; }
+        .badge-topic { background-color: var(--topic-bg); color: var(--topic-text); border: 1px solid #f9e79f; }
+        .badge-importance { background-color: #e8f8f5; color: #117864; }
+        .badge-complexity { background-color: #fdedec; color: #c0392b; }
 
         .analogy {
             background-color: #f8f9fa;
@@ -175,18 +157,26 @@
             font-size: 0.9em;
             color: #555;
         }
-
-        @media (max-width: 768px) {
-            .glossary-grid {
-                grid-template-columns: 1fr;
-            }
+        
+        .cost-note {
+            font-size: 0.85em;
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
         }
+
+        @media (max-width: 768px) { .glossary-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <h1>HospedaPlus Revenue: Glosario Visual de Arquitectura</h1>
-    <p class="subtitle">Guía completa de servicios, roles y justificaciones técnicas por capa</p>
+    <h1>HospedaPlus Revenue</h1>
+    <p class="subtitle">Glosario Visual de Arquitectura, Requerimientos y Decisiones Técnicas</p>
+    
+    <div class="project-badge">
+        <i class="fa-solid fa-trophy"></i> Proyecto 10 de 10 · Costo Total Producción: ~$475 USD/mes (AWS + QuickSight)
+    </div>
 
     <!-- CAPA 1: INPUTS AND EDGE -->
     <section class="layer-section layer-1">
@@ -202,10 +192,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es la <strong>guía telefónica de Internet</strong>. Traduce el nombre de dominio legible (ej. <code>api.hospedaplus.com</code>) a la dirección IP del Application Load Balancer. Es el primer punto de contacto para los huéspedes y el Channel Manager.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Cloudflare):</strong> Integración nativa con IAM y ALB, enrutamiento por latencia y SLA del 100%.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el GPS que te dice a qué dirección física (IP) debe ir tu carta (petición HTTP).</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-05: API Disponibilidad</span>
+                        <span class="badge badge-req">RNF-04: 99.9% Disponibilidad</span>
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>primer punto de contacto</strong>. Traduce el dominio legible (<code>api.hospedaplus.com</code>) a la IP del ALB. Garantiza que el Channel Manager y los huéspedes lleguen a la API de disponibilidad.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Enrutamiento por latencia, SLA del 100%, integración nativa con IAM.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.90/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el GPS que traduce el nombre de la calle a coordenadas exactas.</div>
                 </div>
             </div>
 
@@ -218,10 +214,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>guardaespaldas de la API</strong>. Filtra el tráfico malicioso (SQL injection, XSS, bots) antes de que llegue al ALB, protegiendo el sistema de reservas en tiempo real.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Cloudflare WAF):</strong> Nativo de AWS, se integra con CloudWatch para alarmas y no requiere gestionar servidores.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el detector de metales en la entrada de un aeropuerto: deja pasar a los pasajeros legítimos, pero bloquea a quien trae armas.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Seguridad</span>
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>guardaespaldas perimetral</strong>. Filtra tráfico malicioso (SQLi, XSS, bots) antes de que toque el ALB, protegiendo la API en tiempo real y los datos de huéspedes.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Reglas gestionadas por AWS, integración con CloudWatch para alertas.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $23.54/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el detector de metales en un aeropuerto: bloquea amenazas, deja pasar pasajeros.</div>
                 </div>
             </div>
 
@@ -234,10 +235,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>director de tráfico</strong>. Reparte las peticiones de reserva entre las múltiples tareas de FastAPI en ECS Fargate, distribuyéndolas en 2 Zonas de Disponibilidad. Si una tarea falla, deja de enviarle tráfico (Health Checks).</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Nginx):</strong> Servicio gestionado, escala automáticamente y no es un punto único de fallo.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el guardia de tráfico que dirige los autos al carril disponible para evitar embotellamientos.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-04: 99.9% Disponibilidad</span>
+                        <span class="badge badge-req">RF-05: API Disponibilidad</span>
+                        <span class="badge badge-topic">Tema 9: Fargate + ALB</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>director de tráfico</strong>. Reparte las peticiones entre las tareas de FastAPI en 2 AZs y ejecuta health checks. Si un contenedor falla, el ALB lo retira del pool.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Servicio gestionado, escalado automático, elimina SPOF.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $18.77/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el guardia de tráfico que dirige los autos al carril con menos congestión.</div>
                 </div>
             </div>
 
@@ -250,10 +257,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> El <strong>Internet Gateway</strong> permite la entrada desde Internet al ALB. El <strong>NAT Gateway</strong> permite que los recursos en subredes privadas (FastAPI, Spark) salgan a Internet sin ser accesibles directamente desde fuera.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas:</strong> Única forma segura y estándar de dar salida a Internet a subredes privadas en AWS.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> El Internet Gateway es la puerta principal; el NAT Gateway es la puerta trasera por la que sale el personal de servicio sin que los visitantes entren por ahí.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking (VPC)</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> El <strong>Internet Gateway</strong> permite la entrada al ALB. El <strong>NAT Gateway</strong> da salida a Internet a los servicios en subredes privadas (FastAPI, Spark, Lambda) sin exponerlos directamente.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Aislamiento de red estándar en AWS. NAT Gateway es gestionado y altamente disponible.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $35.10/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> El Internet Gateway es la puerta principal; el NAT es la puerta trasera de servicio.</div>
                 </div>
             </div>
 
@@ -266,10 +277,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es la <strong>fábrica y el almacén de contenedores</strong>. GitHub Actions empaqueta el código en imágenes Docker y las sube a ECR. Luego, ECS descarga estas imágenes para ejecutarlas.</p>
-                    <p><span class="tag tag-importance">Importancia: Media</span> <span class="tag tag-complexity">Complejidad: Baja-Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Docker Hub):</strong> ECR es privado por defecto, sin límites de pulls, e integrado con IAM.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> GitHub Actions es la cocina donde se preparan los platos (código); ECR es la nevera donde se guardan hasta que el restaurante (ECS) los pide.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 8: ECR + ECS</span>
+                        <span class="badge badge-topic">Tema 17: CI/CD Aplicaciones</span>
+                        <span class="badge badge-req">CT-04: Pipeline bloquea merge</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> <strong>Fábrica de contenedores</strong>. GitHub Actions empaqueta el código en imágenes Docker y las sube a ECR. ECS descarga estas imágenes para ejecutar FastAPI, Spark y RabbitMQ.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja-Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> ECR privado por defecto, sin límites de pulls, integrado con IAM.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.50/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> GitHub Actions es la cocina; ECR es la nevera donde se guardan los platos listos.</div>
                 </div>
             </div>
 
@@ -290,10 +307,18 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>cerebro de las reservas en tiempo real</strong>. Recibe peticiones, aplica reglas de negocio (RN-03, RN-04, RN-07: límites de sobreventa y penalizaciones) y escribe en RDS PostgreSQL en una transacción atómica. Debe responder en milisegundos.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (EC2, Lambda):</strong> Fargate elimina la gestión de servidores. FastAPI es asíncrono (ASGI) y más rápido. Lambda tiene límite de 15 min.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un mesero extremadamente rápido que toma el pedido, verifica disponibilidad y confirma la reserva en el acto.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-01 al RF-07</span>
+                        <span class="badge badge-req">RN-03, RN-04, RN-07 (Sobreventa/Cancelación)</span>
+                        <span class="badge badge-req">RNF-01: Latencia p95 ≤ 250ms</span>
+                        <span class="badge badge-req">RNF-02: Consistencia</span>
+                        <span class="badge badge-topic">Temas 1, 2, 8, 9</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>cerebro de las reservas</strong>. Aplica reglas de negocio en milisegundos (límites de sobreventa, penalizaciones). Escribe en RDS en una transacción atómica para evitar sobreventa (CA-08: 50 solicitudes concurrentes).</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Lambda):</strong> Fargate permite conexiones persistentes y procesos largos. FastAPI es asíncrono y rápido.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $72.08/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un mesero ultra rápido que verifica disponibilidad y confirma la reserva en el acto.</div>
                 </div>
             </div>
 
@@ -306,10 +331,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es la <strong>tubería de eventos del Channel Manager</strong>. Recibe eventos de reserva (F2) y los encola de forma durable (con ACK). Evita perder reservas si el consumidor está saturado. También es el broker de Celery para Airflow.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (SQS, Kafka):</strong> Ofrece enrutamiento flexible. SQS es serverless pero menos flexible. Kafka está sobredimensionado para este caso.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es una oficina de correos que recibe y clasifica las cartas (eventos) para que el cartero (Consumer) las entregue en orden.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-05: Ningún evento perdido</span>
+                        <span class="badge badge-req">CA-09: Eventos fuera de orden</span>
+                        <span class="badge badge-topic">Tema 10: RabbitMQ</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es la <strong>tubería de eventos</strong>. Recibe eventos del Channel Manager (F2) y los encola durablemente (con ACK). Evita la pérdida de reservas si el consumidor se satura. Usa 2 vhosts (reservas y Airflow) para ahorrar costos.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (SQS):</strong> Enrutamiento flexible, persistencia de mensajes, ideal para eventos fuera de orden.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $34.37/mes (50% del host EC2)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la oficina de correos que clasifica y guarda las cartas hasta que el cartero las procesa.</div>
                 </div>
             </div>
 
@@ -322,10 +353,17 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>aplicador de eventos en tiempo real</strong>. Lee mensajes de RabbitMQ, actualiza inventario en RDS (misma transacción atómica que FastAPI para evitar doble reserva) y copia el evento crudo a S3 Bronze.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Lambda):</strong> Fargate permite procesos de larga duración y conexiones persistentes a RabbitMQ, algo que Lambda no soporta bien.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el cartero que lee cada carta, actualiza el inventario en el sistema central y archiva una copia en el sótano (S3 Bronze).</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-01, RF-07</span>
+                        <span class="badge badge-req">RN-08: Duplicados entre canales</span>
+                        <span class="badge badge-req">CA-09: Out-of-order events</span>
+                        <span class="badge badge-topic">Temas 8, 9</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>aplicador de eventos</strong>. Lee mensajes de RabbitMQ, aplica cambios de inventario en RDS (misma transacción atómica que FastAPI) y copia el evento crudo a S3 Bronze para auditoría.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Lambda):</strong> Conexiones persistentes a RabbitMQ, procesos de larga duración.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $36.04/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el cartero que lee, actualiza el inventario y archiva una copia en el sótano.</div>
                 </div>
             </div>
 
@@ -338,10 +376,17 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es la <strong>fuente de verdad operativa</strong>. Almacena el motor de reservas (F3), inventario, tarifas y límites de sobreventa para los 28 hoteles. Garantiza ACID para que no se venda una habitación dos veces.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Aurora, DynamoDB):</strong> RDS es más económico que Aurora. DynamoDB no soporta transacciones ACID multi-tabla ni joins.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja registradora central blindada: debe ser confiable, precisa y no puede perder ninguna transacción.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-02: Inventario disponible</span>
+                        <span class="badge badge-req">RNF-02: Consistencia</span>
+                        <span class="badge badge-req">CA-08: Cero doble venta</span>
+                        <span class="badge badge-topic">Tema 7: S3 + RDS</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es la <strong>fuente de verdad operativa</strong>. Almacena inventario, tarifas, reservas y límites de sobreventa para los 28 hoteles. Garantiza ACID para evitar vender la misma habitación dos veces.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (DynamoDB):</strong> Soporta transacciones ACID multi-tabla y joins, esenciales para consultas de disponibilidad.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $117.17/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja registradora blindada que nunca pierde una transacción.</div>
                 </div>
             </div>
 
@@ -362,10 +407,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>director de orquesta</strong>. Programa las tareas diarias: extraer datos de APIs (Lambda), copiar archivos a S3, lanzar Jobs de Spark, ejecutar el Crawler de Glue y orquestar el retorno de precios a RDS.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Alta</span></p>
-                    <p><strong>Ventajas vs. Alternativas (MWAA):</strong> Airflow en EC2 es $499/mes más barato que MWAA. Step Functions está atado a AWS y es menos flexible para DAGs complejos.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el director de una orquesta que indica cuándo debe tocar cada músico (worker) para que la sinfonía (pipeline) suene perfecta.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RN-05: Precios diarios</span>
+                        <span class="badge badge-req">RNF-03: Precios antes de las 06:00</span>
+                        <span class="badge badge-topic">Temas 11, 12</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>director de orquesta</strong>. Programa las tareas diarias: extracción de APIs (Lambda), copia a S3, Jobs de Spark, Crawler de Glue y el retorno de precios a RDS. Celery distribuye las tareas.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Alta</span></p>
+                    <p><strong>Ventajas vs. Alternativas (MWAA):</strong> Airflow en EC2 ahorra ~$499/mes frente a MWAA.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $34.37/mes (50% del host EC2)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el director de orquesta que coordina a todos los músicos (workers) para que la sinfonía suene perfecta.</div>
                 </div>
             </div>
 
@@ -378,10 +429,17 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es la <strong>refinería de datos</strong>. Ejecuta los Jobs 1 (Bronze a Silver: limpieza, pseudonimización), Job 2 (Silver a Gold: ADR, RevPAR, pickup) y Job 3 (Reglas de negocio: precios dinámicos que retornan a RDS).</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Alta</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Glue, Databricks):</strong> Fargate Spot ahorra ~$11.90/mes. Glue es más caro. Databricks cobra licencias por DBU.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es una fábrica con miles de trabajadores temporales (Spot) que procesan la materia prima y la convierten en productos terminados (KPIs).</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RN-01: ADR, RevPAR</span>
+                        <span class="badge badge-req">RN-10: Reputación</span>
+                        <span class="badge badge-req">RN-11: Seudonimización</span>
+                        <span class="badge badge-topic">Temas 13, 14, 15, 16</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es la <strong>refinería de datos</strong>. Job 1 (Bronze->Silver: limpieza), Job 2 (Silver->Gold: ADR, RevPAR, pickup, reputación), Job 3 (Precios dinámicos -> RDS).</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Alta</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Glue):</strong> Fargate Spot ahorra ~70%. Control total sobre versiones de librerías.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $5.57/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es una fábrica con miles de trabajadores temporales (Spot) procesando materia prima en productos terminados.</div>
                 </div>
             </div>
 
@@ -394,10 +452,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>extractor de APIs externas</strong>. Airflow invoca funciones Lambda para llamar a las APIs F5 (Reseñas), F6 (Eventos) y F7 (Divisas), extraer el JSON crudo y depositarlo en S3 Bronze.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (EC2):</strong> Sin servidores, pago por ejecución, ideal para tareas intermitentes. EC2 estaría encendido 24/7 sin necesidad.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un taxi: lo llamas cuando lo necesitas, haces el viaje (extracción) y lo despides. No pagas por tenerlo estacionado.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">F5, F6, F7: Extracción APIs</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>extractor de APIs externas</strong>. Airflow invoca funciones Lambda para llamar a las APIs de Reseñas, Eventos y Divisas, extrayendo el JSON crudo y depositándolo en S3 Bronze.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (EC2):</strong> Sin servidores, pago por ejecución, ideal para tareas intermitentes.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00 (Free Tier)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un taxi: lo llamas cuando lo necesitas, haces el viaje y lo despides.</div>
                 </div>
             </div>
 
@@ -410,10 +473,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>hogar de Airflow y RabbitMQ</strong>. Una sola instancia EC2 t3.large con un volumen EBS gp3 de 100 GB aloja el scheduler de Airflow y el broker RabbitMQ, ahorrando $499/mes frente a MWAA + Amazon MQ.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (MWAA + MQ):</strong> Ahorro masivo de costos. Se asume el riesgo de ser un punto único de fallo (SPOF).</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el edificio de oficinas donde trabajan el director de orquesta (Airflow) y la oficina de correos (RabbitMQ).</div>
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking + EC2</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>hogar de Airflow y RabbitMQ</strong>. Una sola instancia t3.large con EBS gp3 aloja el scheduler y el broker, ahorrando $499/mes frente a MWAA + Amazon MQ.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Ahorro masivo de costos. Se asume el riesgo de SPOF (documentado en las limitaciones).</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $68.74/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el edificio de oficinas donde trabajan el director de orquesta y la oficina de correos.</div>
                 </div>
             </div>
 
@@ -426,10 +493,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>generador de datos sintéticos</strong>. Puebla el sistema con datos de prueba versionados para que los desarrolladores y el pipeline puedan probarse sin depender de datos reales de producción.</p>
-                    <p><span class="tag tag-importance">Importancia: Media</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Datos reales):</strong> Evita exponer datos sensibles de huéspedes en entornos de desarrollo y permite probar escenarios extremos.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el equipo de actores que simulan ser clientes para que el restaurante (sistema) practique antes de la apertura real.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">CT-06: Seed reproducible</span>
+                        <span class="badge badge-req">RNF-06: Datos seudonimizados</span>
+                        <span class="badge badge-topic">Tema 3, 4: Docker</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>generador de datos sintéticos</strong>. Puebla el sistema con datos de prueba versionados (F2, F3, F4, F5) inyectando defectos de calidad configurables.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Datos reales):</strong> Evita exponer datos sensibles y permite probar escenarios extremos (out-of-order events).</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $19.50/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Son actores que simulan ser clientes para que el restaurante practique antes de la apertura.</div>
                 </div>
             </div>
 
@@ -450,10 +523,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>almacén central de datos (Data Lake)</strong>. Bronze: JSON crudo de Lambda y CSV de Airflow. Silver: Datos limpios, deduplicados y pseudonimizados en Parquet. Gold: Esquema estrella con KPIs listos para Athena y QuickSight.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (HDFS, Azure Blob):</strong> S3 es gestionado, duradero (11 nueves) y no requiere clústeres.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un almacén infinito de cajas: Bronze son cajas sin abrir, Silver son cajas organizadas, Gold son cajas con productos listos para vender.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-req">RN-11: Sin datos personales en Silver/Gold</span>
+                        <span class="badge badge-topic">Tema 7: S3, Tema 20: Data Lake</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>almacén central (Data Lake)</strong>. Bronze (JSON/CSV crudo), Silver (limpio, seudonimizado, Parquet), Gold (Esquema estrella con KPIs listos para Athena).</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (HDFS):</strong> Durabilidad 11 nueves, escalabilidad infinita, sin gestión de clústeres.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $4.30/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un almacén infinito: Bronze son cajas sin abrir, Silver organizadas, Gold listas para vender.</div>
                 </div>
             </div>
 
@@ -466,10 +545,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>bibliotecario</strong>. Escanea la capa Gold de S3 después de cada ejecución de Spark, descubre nuevas tablas y particiones, y actualiza el Glue Data Catalog.</p>
-                    <p><span class="tag tag-importance">Importancia: Media</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Scripts manuales):</strong> Automatiza la catalogación y detecta cambios de esquema sin intervención humana.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el bibliotecario que escanea libros nuevos y actualiza el índice de la biblioteca.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-topic">Tema 20: Arquitectura + Power BI</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>bibliotecario</strong>. Escanea la capa Gold, descubre nuevas tablas y particiones, y actualiza el Glue Data Catalog para que Athena sepa qué consultar.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Scripts manuales):</strong> Automatiza la catalogación y detecta cambios de esquema.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $4.50/mes (30 ejecuciones)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el bibliotecario que escanea libros nuevos y actualiza el índice.</div>
                 </div>
             </div>
 
@@ -482,10 +566,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>diccionario de datos</strong>. Almacena la definición de cada tabla y columna en S3, permitiendo que Athena y Spark sepan qué están leyendo y cómo consultarlo.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja-Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Hive Metastore):</strong> Serverless, integrado con Athena y sin coste adicional por consulta.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el índice de una biblioteca: sin él, no sabrías qué libros tienes ni dónde encontrarlos.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-topic">Tema 20: Data Lake</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>diccionario de datos</strong>. Almacena metadatos de las tablas en S3, permitiendo que Athena y Spark las lean sin mover los datos.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja-Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Hive Metastore):</strong> Serverless, integrado con Athena, sin coste adicional.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00 (Free Tier)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el índice de una biblioteca: sin él, no sabrías qué libros tienes.</div>
                 </div>
             </div>
 
@@ -498,10 +587,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>motor de consultas analíticas</strong>. Lee la capa Gold de S3 a través del Glue Catalog y devuelve los datos a QuickSight. Pagas solo por TB escaneado ($5/TB).</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Redshift, Snowflake):</strong> Sin coste fijo de clúster inactivo. Para 0.2 TB/mes, cuesta solo $1.00.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un buscador que lee libros directamente en los estantes sin tener que moverlos a una mesa.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-topic">Tema 20: Arquitectura + Power BI</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>motor de consultas analíticas</strong>. Lee la capa Gold desde S3 usando el Catálogo y devuelve los datos a QuickSight (o Power BI). Pagas solo por TB escaneado.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Redshift):</strong> Sin coste fijo de clúster inactivo. Para 0.2 TB/mes, cuesta $1.00.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.98/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un buscador que lee libros en los estantes sin moverlos a una mesa.</div>
                 </div>
             </div>
 
@@ -522,10 +616,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es la <strong>capa de visualización</strong>. Consume los datos de Athena y presenta dashboards de ocupación, ADR, RevPAR, pickup y reputación para los gerentes de hotel y revenue managers.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Power BI):</strong> Lee Athena directamente sin Data Gateway. Más barato: $36/mes (1 Autor + 4 Lectores) vs. $70/mes de Power BI Pro.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el tablero de un automóvil que muestra velocidad, gasolina y temperatura de forma visual y comprensible.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">CT-10: Responde preguntas de negocio</span>
+                        <span class="badge badge-topic">Tema 20: Power BI / Visualización</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es la <strong>capa de visualización</strong>. Consume Athena y presenta dashboards de ocupación, ADR, RevPAR, pickup y reputación para gerentes y revenue managers.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Power BI):</strong> Lee Athena directamente sin Data Gateway. Más barato ($36 vs $70/mes). Se integra nativamente en la VPC.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $36.00/mes (1 Autor + 4 Lectores)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el tablero del auto: muestra velocidad, gasolina y temperatura de forma visual.</div>
                 </div>
             </div>
 
@@ -538,10 +637,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>campo de pruebas</strong>. Permite probar nuevas versiones de FastAPI, Spark o cambios en RDS sin afectar a los huéspedes reales. Corre solo en horario laboral (~220 h/mes) para ahorrar costos.</p>
-                    <p><span class="tag tag-importance">Importancia: Media</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Probar en producción):</strong> Evita caídas del sistema real y permite experimentar con seguridad.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el simulador de vuelo para pilotos: practicas maniobras riesgosas sin poner en peligro a los pasajeros reales.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>campo de pruebas</strong>. Copia reducida de producción (ECS + RDS) para probar nuevas versiones sin afectar a huéspedes reales. Corre solo en horario laboral.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Evita caídas del sistema real y permite experimentar con seguridad.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: ~$40/mes (solo cuando se enciende)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el simulador de vuelo para pilotos: practicas sin riesgo real.</div>
                 </div>
             </div>
 
@@ -562,10 +665,16 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>guardia de seguridad</strong>. Define roles de privilegio mínimo: Lambda solo puede escribir en S3 Bronze, Spark solo puede leer de S3 y escribir en RDS. Sin IAM, los servicios no podrían comunicarse de forma segura.</p>
-                    <p><span class="tag tag-importance">Importancia: Crítica</span> <span class="tag tag-complexity">Complejidad: Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Okta):</strong> Gratuito con AWS, nativo para todos los servicios, sin mantenimiento.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el sistema de tarjetas de acceso de la empresa: cada empleado solo puede entrar a su oficina.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Seguridad</span>
+                        <span class="badge badge-req">CT-02: Sin credenciales en repo</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos (IAM)</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>guardia de seguridad</strong>. Define roles de privilegio mínimo: Lambda solo escribe en S3 Bronze, Spark lee S3 y escribe en RDS, etc. Evita accesos no autorizados.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Okta):</strong> Gratuito, nativo, sin mantenimiento. Esencial para la auditoría (CA-10).</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el sistema de tarjetas de acceso: cada empleado solo entra a su oficina.</div>
                 </div>
             </div>
 
@@ -578,9 +687,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>cerrajero</strong>. Cifra los datos en reposo en S3, RDS y los secretos. Garantiza que si alguien roba un disco físico de AWS, no pueda leer los datos.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Cifrado manual):</strong> Totalmente gestionado, rota claves automáticamente, se integra con CloudTrail.</p>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Datos cifrados</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>cerrajero</strong>. Cifra datos en reposo en S3, RDS y Secrets Manager. Garantiza que si alguien roba un disco físico, no pueda leer los datos.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Cifrado manual):</strong> Rotación automática de claves, integración con CloudTrail.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $2.00/mes</span>
                     <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja fuerte donde se guardan las llaves de la empresa.</div>
                 </div>
             </div>
@@ -594,10 +708,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>guardián de las contraseñas</strong>. Guarda las credenciales de RDS, RabbitMQ y APIs externas fuera del código fuente. FastAPI y Airflow las leen en tiempo de ejecución.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Variables de entorno):</strong> Rota credenciales automáticamente, evita fugas de secretos en el código.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja de seguridad donde se guardan las llaves de acceso, en lugar de dejarlas debajo del felpudo.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">CT-02: Sin secretos en repo</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>guardián de las contraseñas</strong>. Guarda credenciales de RDS, RabbitMQ y APIs fuera del código fuente. FastAPI y Airflow las leen en tiempo de ejecución.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Variables de entorno):</strong> Rotación automática, evita fugas de secretos en Git.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $3.20/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja de seguridad donde se guardan las llaves, no debajo del felpudo.</div>
                 </div>
             </div>
 
@@ -610,9 +729,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>sistema de observabilidad</strong>. Recopila logs de Lambda, Airflow, Spark y FastAPI. Monitorea la latencia de la API (RNF-01) y dispara alarmas si algo falla (ej. si el Consumer se detiene).</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja-Media</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Datadog):</strong> Nativo de AWS, sin coste de integración, cubre logs/métricas/alarmas en un solo servicio.</p>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-01: Latencia</span>
+                        <span class="badge badge-req">CT-09: Alarma en vivo</span>
+                        <span class="badge badge-topic">Tema 20: Observabilidad</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>sistema de observabilidad</strong>. Recopila logs de Lambda, Airflow, Spark y FastAPI. Monitorea la latencia p95 y dispara alarmas si el Consumer se detiene o si la API supera los 250ms.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja-Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Datadog):</strong> Nativo de AWS, sin coste de integración.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $11.60/mes</span>
                     <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Son las cámaras de seguridad y el sistema de alarmas de la empresa.</div>
                 </div>
             </div>
@@ -626,10 +751,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p><strong>Rol en la infraestructura:</strong> Es el <strong>registro notarial</strong>. Guarda un historial de quién hizo qué en la cuenta (quién creó un bucket, quién modificó un rol de IAM). Esencial para cumplimiento y seguridad.</p>
-                    <p><span class="tag tag-importance">Importancia: Alta</span> <span class="tag tag-complexity">Complejidad: Baja</span></p>
-                    <p><strong>Ventajas vs. Alternativas (Logs manuales):</strong> Automático, inmutable, integrado con CloudWatch para alertas.</p>
-                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el libro de actas de una empresa: registra cada decisión y acción importante para futuras auditorías.</div>
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Auditoría</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <p><strong>Rol clave:</strong> Es el <strong>registro notarial</strong>. Guarda un historial de quién hizo qué en la cuenta AWS (quién creó un bucket, quién modificó un rol IAM). Esencial para cumplimiento y seguridad.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Logs manuales):</strong> Automático, inmutable, integrado con CloudWatch.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00 (Free Tier 1er trail)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el libro de actas de la empresa: registra cada decisión para futuras auditorías.</div>
                 </div>
             </div>
 
