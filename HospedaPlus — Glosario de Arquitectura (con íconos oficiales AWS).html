@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HospedaPlus Revenue: Glosario Visual de Arquitectura y Requerimientos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --orange: #e67e22;
+            --teal: #16a085;
+            --yellow: #f1c40f;
+            --green: #27ae60;
+            --blue: #2980b9;
+            --red: #c0392b;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --req-bg: #eaf2f8;
+            --req-text: #2980b9;
+            --topic-bg: #fef9e7;
+            --topic-text: #b7950b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: var(--text-light); margin-bottom: 30px; font-size: 1.1em; }
+        
+        .project-badge {
+            display: block;
+            text-align: center;
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .layer-section { margin-bottom: 40px; }
+
+        .layer-title {
+            font-size: 1.4em;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ddd;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .layer-title i { font-size: 1.2em; }
+
+        .layer-1 .layer-title { border-color: var(--orange); color: var(--orange); }
+        .layer-2 .layer-title { border-color: var(--teal); color: var(--teal); }
+        .layer-3 .layer-title { border-color: var(--yellow); color: #d4ac0d; }
+        .layer-4 .layer-title { border-color: var(--green); color: var(--green); }
+        .layer-5 .layer-title { border-color: var(--blue); color: var(--blue); }
+        .layer-6 .layer-title { border-color: var(--red); color: var(--red); }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: transform 0.2s;
+            border-top: 5px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 12px rgba(0,0,0,0.1); }
+        .layer-1 .card { border-top-color: var(--orange); }
+        .layer-2 .card { border-top-color: var(--teal); }
+        .layer-3 .card { border-top-color: var(--yellow); }
+        .layer-4 .card { border-top-color: var(--green); }
+        .layer-5 .card { border-top-color: var(--blue); }
+        .layer-6 .card { border-top-color: var(--red); }
+
+        .card-header {
+            padding: 15px 20px;
+            background: #fdfdfd;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            flex-shrink: 0;
+            padding: 0;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        .card-icon img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+        .card-icon i { display: block; }
+
+
+        .card-title { margin: 0; font-size: 1.1em; color: #2c3e50; }
+        .card-subtitle { font-size: 0.8em; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .card-body { padding: 20px; flex-grow: 1; font-size: 0.95em; }
+        .card-body p { margin-top: 0; margin-bottom: 12px; }
+        .card-body strong { color: #2c3e50; }
+
+        .tag-group { margin-bottom: 12px; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .badge-req { background-color: var(--req-bg); color: var(--req-text); border: 1px solid #d4e6f1; }
+        .badge-topic { background-color: var(--topic-bg); color: var(--topic-text); border: 1px solid #f9e79f; }
+        .badge-importance { background-color: #e8f8f5; color: #117864; }
+        .badge-complexity { background-color: #fdedec; color: #c0392b; }
+
+        .concept {
+            background-color: #f4f6f8;
+            border: 1px solid #e3e8ec;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+        }
+        .concept-label {
+            display: block;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #5d6d7e;
+            margin-bottom: 4px;
+        }
+        .concept p { margin: 0; font-size: 0.92em; color: #34495e; }
+
+        .analogy {
+            background-color: #f8f9fa;
+            border-left: 4px solid #bdc3c7;
+            padding: 10px 15px;
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .cost-note {
+            font-size: 0.85em;
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        @media (max-width: 768px) { .glossary-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>HospedaPlus Revenue</h1>
+    <p class="subtitle">Glosario Visual de Arquitectura, Requerimientos y Decisiones Técnicas</p>
+    
+    <div class="project-badge">
+        <i class="fa-solid fa-trophy"></i> Proyecto 10 de 10 · Costo Total Producción: $487.23 USD/mes (AWS + QuickSight) · Base verificada en AWS Pricing Calculator + ajuste manual de Glue, Ohio (us-east-2), oct. 2026
+    </div>
+
+    <!-- CAPA 1: INPUTS AND EDGE -->
+    <section class="layer-section layer-1">
+        <h2 class="layer-title"><i class="fa-solid fa-network-wired"></i> Capa 1: Inputs and Edge (Entradas y Borde)</h2>
+        <div class="glossary-grid">
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVJvdXRlLTUzXzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiM4YzRmZmYiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzguNzYxIDMyLjUyN3EuODYyLjc5Ni44NjIgMi4xMzcgMCAxLjQ2LTEuMDQ5IDIuMzN0LTIuODIuODcxYTYuOSA2LjkgMCAwIDEtMi43NjgtLjU5NXYtMS4xOTJxMS42MjIuNTM2IDIuNzY4LjUzNiAxLjEzIDAgMS43NDEtLjUwNi42MTEtLjUwNy42MTEtMS40NDQgMC0xLjgwMi0yLjI3OC0xLjgwMi0uNzE0IDAtMS40MTQuMDc0di0uOTgzbDMuMTI2LTMuNDFoLTQuNDA2di0xLjIyMWg2LjA1OXYxLjE3N2wtMy4wNjcgMy4yNDZhMSAxIDAgMCAxIC4xNDktLjAxNWguMTQ5cTEuNDc0IDAgMi4zMzcuNzk3bS04LjY0Ny0uMjZxLjkwNi44NDguOTA3IDIuMzM3IDAgMS40Ni0xLjA1NyAyLjM2LTEuMDU4LjkwMS0yLjc4My45MDEtMS41MTggMC0yLjg0My0uNTk1di0xLjE5MnExLjY1My41MzYgMi44MjguNTM2IDEuMTMxIDAgMS43MzQtLjUxMy42MDMtLjUxNC42MDItMS40ODIuMDAxLTEuMDU3LS41NjUtMS41MzQtLjU2NS0uNDc2LTEuODQ2LS40NzYtLjkyMiAwLTIuMzA3LjE0OXYtLjk4M2wuMjg0LTQuNDUzSDMwLjV2MS4yMjJoLTQuMTgybC0uMTk1IDMuMDIzcS44MTktLjE1IDEuNDc0LS4xNSAxLjYwOCAwIDIuNTE3Ljg1bTExLjE0NyAxMC42OTdjLTMuNzQ1LjY3Mi03LjAyOCAyLjE4Mi05LjI2MSAzLjQzMS0yLjIzMi0xLjI1LTUuNTE1LTIuNzYtOS4yNi0zLjQzMS0xLjAzMi0uMTg1LTYuMTc0LTEuMjU2LTYuMTc0LTQuMTQgMC0xLjM2MS40OTctMi4yODIgMS40NTEtMy45MjQgMS4xMTYtMS45MjYgMi42NDYtNC41NjQgMi42NDYtOC4yMjYgMC0yLjU2NC0uNjU5LTUuMDIzLTEuOTYtNy4zMmwuMjY5LS4zMzFjMS45NTUuOTUgMy45ODcgMS40MyA2LjA1MyAxLjQzIDIuNTQ2IDAgNC44ODktLjY1NyA2Ljk3NS0xLjk1MSAyLjA4NiAxLjI5NCA0LjQzIDEuOTUgNi45NzYgMS45NSAyLjA2NSAwIDQuMDk3LS40OCA2LjA1My0xLjQzbC4yNjguMzMxYy0xLjMwMSAyLjI5OC0xLjk2IDQuNzU3LTEuOTYgNy4zMiAwIDMuNjYzIDEuNTMgNi4zIDIuNjQ3IDguMjI3Ljk1NCAxLjY0MiAxLjQ1MSAyLjU2MyAxLjQ1MSAzLjkyNSAwIDIuODgzLTUuMTQzIDMuOTU0LTYuMTc0IDQuMTM5bTQuMDc2LTE2LjI5YzAtMi40MTUuNjgyLTQuNzMgMi4wMjUtNi44ODJhMSAxIDAgMCAwLS4wNzQtMS4xNjJjLS4zOTUtLjQ4NS0uODA5LS45OTQtMS4yMTgtMS41YTEgMSAwIDAgMC0xLjI2MS0uMjQ2Yy0xLjg4MyAxLjA0LTMuODQ2IDEuNTY4LTUuODMzIDEuNTY4LTIuNCAwLTQuNDk0LS42NDQtNi40MDYtMS45N2ExIDEgMCAwIDAtMS4xMzkgMGMtMS45MTIgMS4zMjYtNC4wMDcgMS45Ny02LjQwNiAxLjk3LTEuOTg4IDAtMy45NTEtLjUyOC01LjgzMy0xLjU2OGExIDEgMCAwIDAtMS4yNjEuMjQ2Yy0uNDA5LjUwNi0uODIzIDEuMDE1LTEuMjE5IDEuNWExIDEgMCAwIDAtLjA3MyAxLjE2MmMxLjM0MyAyLjE1MiAyLjAyNCA0LjQ2NyAyLjAyNCA2Ljg4MiAwIDMuMTI0LTEuMjYyIDUuMy0yLjM3NyA3LjIyMS0xLjA2NiAxLjg0LTEuNzIgMy4wNi0xLjcyIDQuOTMgMCA0LjM2MyA1Ljk4NSA1Ljc3OCA3LjgyIDYuMTA4IDMuNzUuNjc0IDcuMDI0IDIuMjY1IDkuMTExIDMuNDhhMSAxIDAgMCAwIDEuMDA2IDBjMi4wODctMS4yMTUgNS4zNjItMi44MDYgOS4xMTItMy40OCAxLjgzNC0uMzMgNy44Mi0xLjc0NSA3LjgyLTYuMTA4IDAtMS44Ny0uNjU0LTMuMDktMS43MjEtNC45My0xLjExNC0xLjkyLTIuMzc3LTQuMDk3LTIuMzc3LTcuMjIxbS0zLjI2OSAyMC43ODVjLTQuNjY2LjgzOC04LjYgMy4yOTYtMTAuMDY4IDQuMzA5LTEuNDY4LTEuMDEzLTUuNDAxLTMuNDctMTAuMDY3LTQuMzEtMi4zMy0uNDE4LTkuOTMzLTIuMjgtOS45MzMtOC42MzMgMC0yLjY1NSAxLjAwNC00LjM4NyAyLjA2OC02LjIyLjk5OC0xLjcyIDIuMDMtMy40OTggMi4wMy01LjkzMSAwLTMuNjY3LTIuMDI3LTYuMzAyLTMuMTU3LTcuNDg3IDEuMTU0LTEuNDA1IDMuNjk1LTQuNTA2IDUuMDg4LTYuMjkgMi4xMjIgMS45MzUgNC41NzEgMi45ODggNi45OTYgMi45ODggMi43MDEgMCA0Ljk0Mi0xLjA2NSA2Ljk3NS0zLjMzNiAyLjAzMyAyLjI3IDQuMjc1IDMuMzM2IDYuOTc2IDMuMzM2IDIuNDI1IDAgNC44NzQtMS4wNTMgNi45OTYtMi45ODggMS4zOTMgMS43ODQgMy45MzQgNC44ODUgNS4wODggNi4yOS0xLjEzIDEuMTg1LTMuMTU3IDMuODItMy4xNTcgNy40ODcgMCAyLjQzMyAxLjAzMiA0LjIxMiAyLjAzIDUuOTMyQzUwLjk5NiAzNC40MzggNTIgMzYuMTcgNTIgMzguODI1YzAgNi4zNTQtNy42MDIgOC4yMTUtOS45MzIgOC42MzRNNTEuNjYyIDMxLjZjLS45NDQtMS42MjctMS43NTktMy4wMzMtMS43NTktNC45MjcgMC00LjAwMiAzLjEyMS02LjYwMyAzLjE1LTYuNjI3YTEgMSAwIDAgMCAuMTQzLTEuNDE0Yy0uMDUyLS4wNjItNS4xNDctNi4yNC02LjMxMS03LjgzNWExIDEgMCAwIDAtMS41MzgtLjA5NGMtMS45MTcgMi4wNS00LjE4IDMuMTgtNi4zNzEgMy4xOC0yLjQxNiAwLTQuMzIyLTEuMDgzLTYuMTgyLTMuNTEzLS4zNzktLjQ5NS0xLjIwOS0uNDk1LTEuNTg4IDAtMS44NTkgMi40My0zLjc2NSAzLjUxMy02LjE4MSAzLjUxMy0yLjE5MiAwLTQuNDU0LTEuMTMtNi4zNzEtMy4xOGExIDEgMCAwIDAtMS41MzkuMDk0Yy0xLjE2NCAxLjU5Ni02LjI1OCA3Ljc3My02LjMxIDcuODM1LS4xNy4yMDYtLjI1LjQ3LS4yMjQuNzM3LjAyOC4yNjYuMTU5LjUxLjM2Ny42NzcuMDMyLjAyNiAzLjE1IDIuNTk1IDMuMTUgNi42MjcgMCAxLjg5NC0uODE2IDMuMy0xLjc2IDQuOTI3QzExLjI0MiAzMy40OSAxMCAzNS42MzEgMTAgMzguODI1YzAgNS4zMzYgNC4zMjggOS4zIDExLjU3OSAxMC42MDQgNS4zMTYuOTU0IDkuNzY4IDQuMzMgOS44MTMgNC4zNjVhMSAxIDAgMCAwIDEuMjE4LS4wMDFjLjA0NC0uMDM0IDQuNDc4LTMuNDA2IDkuODExLTQuMzY0QzQ5LjY3MiA0OC4xMjUgNTQgNDQuMTYgNTQgMzguODI1YzAtMy4xOTQtMS4yNDItNS4zMzUtMi4zMzgtNy4yMjQiLz48L2c+PC9zdmc+" alt="Amazon Route 53"></div>
+                    <div>
+                        <h3 class="card-title">Amazon Route 53</h3>
+                        <span class="card-subtitle">DNS</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-05: API Disponibilidad</span>
+                        <span class="badge badge-req">RNF-04: 99.9% Disponibilidad</span>
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Servicio DNS (Domain Name System) gestionado de AWS. Un DNS traduce nombres de dominio legibles por personas (como <code>api.hospedaplus.com</code>) en direcciones IP que las máquinas usan para encontrarse en la red. Route 53 además registra dominios y hace health checks para enrutar solo hacia destinos sanos.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>primer punto de contacto</strong>. Traduce el dominio legible (<code>api.hospedaplus.com</code>) a la IP del ALB. Garantiza que el Channel Manager y los huéspedes lleguen a la API de disponibilidad.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Enrutamiento por latencia, SLA del 100%, integración nativa con IAM.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.90/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el GPS que traduce el nombre de la calle a coordenadas exactas.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLVdBRl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZGQzNDRjIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI2LjkyOSA0MC4zOTdhMTguNiAxOC42IDAgMCAwIDMuMDQgMS42OTJjLS40NzctMi4zNzYtLjc5NC02LjQ4NyAxLjM0My0xMC40MTggMS41OTMtMi45MjggMS44NTYtNi4yNTQuNjg4LTguNjgxYTUuOSA1LjkgMCAwIDAtMS45MjItMi4yOTJjLjc2MiAxLjc1OSAxLjE5IDQuMjk5LjAzOCA3LjU3MmExIDEgMCAwIDEtMS44MjUuMTQyYy0uMzMxLS42MTYtMS4yNDItMi4wMDQtMi4yODMtMi44MzMuNDA4IDEuODc2LjY2NyA0LjY4My0uNjczIDYuNzg4YTggOCAwIDAgMC0uMjAxLjMzNGMtMS40NyAyLjU4OS0uNjgyIDUuOTcgMS43OTUgNy42OTZtNy41NDItMTYuMjQyYy41NjUgMi42NDkuMDkyIDUuNzI1LTEuNDAxIDguNDcxLTIuMTY1IDMuOTgxLTEuMzYzIDguMzE5LS45MSAxMC4wMjUgMS45NTctLjMyOSA2LjkwMy0xLjU1NyA3Ljk1OS01LjY0OSAxLjAxNC0zLjkyNi40LTYuMTk5LS4zMS03LjQyNC0uNzA4IDIuNTQ0LTIuMDA3IDMuNjE1LTIuMDc0IDMuNjY5YTEuMDAyIDEuMDAyIDAgMCAxLTEuNjE0LS45MzhjLjYwNi0zLjc2OC0uMzYtNi4zOS0xLjY1LTguMTU0TTIzLjY1IDMxLjI5YzEuNjA5LTIuNTI3LS4wNzQtNi45NjUtLjA5MS03LjAxYTEgMSAwIDAgMSAuOTMyLTEuMzYxYzEuNzUgMCAzLjI0OCAxLjM1NSA0LjI1IDIuNTkzLjUyOS0zLjk4OS0xLjg3Ny02LjA4NC0xLjk5Ny02LjE4NGExLjAwNCAxLjAwNCAwIDAgMS0uMjYtMS4xOTEuOTkuOTkgMCAwIDEgMS4wNzctLjU2MWMxLjQ3NC4yNjEgMi43NzMuODIyIDMuODUgMS42MzMuOTU1LjQyNyA1LjcyNiAyLjgzOSA2LjcxNCA4LjdxLjA0LS4yNjQuMDcyLS41NWExIDEgMCAwIDEgMS40NzQtLjc3NGMuMTg3LjEwMyA0LjUzMyAyLjU5NSAyLjM4NCAxMC45MTctMS42NzUgNi40ODgtMTAuMTggNy4yMjctMTAuNTQxIDcuMjU1bC0uMDAxLS4wMWMtLjAyMi4wMDItLjA0MS4wMTMtLjA2My4wMTNhMSAxIDAgMCAxLS4zMzUtLjA1OWMtMi4wNTQtLjczNC0zLjg0Ny0xLjYzLTUuMzMtMi42NjMtMy4zMTQtMi4zMS00LjM2NC02Ljg0Ny0yLjM5LTEwLjMyN2ExMCAxMCAwIDAgMSAuMjU1LS40MjFtLTguMTYgMTIuNjYgMS42Mi0xLjE3M0ExOC4yIDE4LjIgMCAwIDEgMTMuNjc3IDMzSDE2di0yaC0yLjMyMWExOC4xNiAxOC4xNiAwIDAgMSAzLjQzMi05LjcxOWwtMS42MjEtMS4xNzNBMjAuMTYgMjAuMTYgMCAwIDAgMTEuNjc5IDMxaC0xLjY4djJoMS42NzdjLjE4NiAzLjk2MiAxLjQ4NCA3LjczMSAzLjgxNCAxMC45NW0yNy4yNTcgMi45NjhBMTguMiAxOC4yIDAgMCAxIDMzIDUwLjM1MVY0OGgtMnYyLjM1MWExOC4yIDE4LjIgMCAwIDEtOS43NS0zLjQzM2wtMS4xNzIgMS42MjFBMjAuMiAyMC4yIDAgMCAwIDMxIDUyLjM1MVY1NGgydi0xLjY0OWMzLjk1LS4xOTEgNy43MDktMS40ODkgMTAuOTE5LTMuODEyek0yMS4yNSAxNy4xNEExOC4yIDE4LjIgMCAwIDEgMzEgMTMuNzA4VjE2aDJ2LTIuMjkyYTE4LjIgMTguMiAwIDAgMSA5Ljc0NyAzLjQzMmwxLjE3Mi0xLjYyYTIwLjE1IDIwLjE1IDAgMCAwLTEwLjkyLTMuODEyVjEwaC0ydjEuNzA4YTIwLjE2IDIwLjE2IDAgMCAwLTEwLjkyMSAzLjgxMnpNNTIuMzIgMzFhMjAuMiAyMC4yIDAgMCAwLTMuODExLTEwLjg5MmwtMS42MjEgMS4xNzNBMTguMiAxOC4yIDAgMCAxIDUwLjMyIDMxSDQ4djJoMi4zMjNhMTguMiAxOC4yIDAgMCAxLTMuNDM1IDkuNzc3bDEuNjIgMS4xNzNjMi4zMy0zLjIxOSAzLjYyOS02Ljk4OCAzLjgxNS0xMC45NUg1NHYtMnptLTcuMjkzLTEwLjU4NCA2LjE1OS02LjE2LTEuNDE0LTEuNDE0LTYuMTYgNi4xNnpNMTguOTcyIDQzLjY0MmwtNi4xNiA2LjE2IDEuNDE0IDEuNDE0IDYuMTYtNi4xNnptMy40NDItMjIuNjQxTDExLjU4NiAxMC4xNzNsLTEuNDE0IDEuNDE0TDIxIDIyLjQxNXpNNDMgNDEuNTg2bDEwLjgyNiAxMC44MjctMS40MTQgMS40MTRMNDEuNTg2IDQzeiIvPjwvZz48L3N2Zz4=" alt="AWS WAF"></div>
+                    <div>
+                        <h3 class="card-title">AWS WAF</h3>
+                        <span class="card-subtitle">Web Application Firewall</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Seguridad</span>
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un Web Application Firewall inspecciona las peticiones HTTP/HTTPS (capa 7) antes de que lleguen a la aplicación y las permite, bloquea o cuenta según reglas. A diferencia de un firewall de red, entiende el contenido de la petición: URLs, cabeceras, cuerpo, IP de origen y frecuencia (rate limiting).</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>guardaespaldas perimetral</strong>. Filtra tráfico malicioso (SQLi, XSS, bots) antes de que toque el ALB, protegiendo la API en tiempo real y los datos de huéspedes.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Reglas gestionadas por AWS, integración con CloudWatch para alertas.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $23.54/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el detector de metales en un aeropuerto: bloquea amenazas, deja pasar pasajeros.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzhDNEZGRiIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDggOCkiPjxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTMzLjY5IDM0LjM3NWgyLjM0NVYzMkgzMy42OXptLTYuOTM5IDBoMi4zNzVWMzJoLTIuMzc1em0tNy44NzUgMGgyLjM3NVYzMmgtMi4zNzV6bS02LjkxIDBoMi4yODVWMzJoLTIuMjg1em02LjAzNS0xNy41aDEyVjExaC0xMnpNMzcuMDM1IDMwaC0xLjUzNHYtMy4zNzVhMSAxIDAgMCAwLTEtMWgtMi41VjIyLjI1YTEgMSAwIDAgMC0xLTFoLTZ2LTIuMzc1aDZhMSAxIDAgMCAwIDEtMVYxMGExIDEgMCAwIDAtMS0xaC0xNGExIDEgMCAwIDAtMSAxdjcuODc1YTEgMSAwIDAgMCAxIDFoNnYyLjM3NWgtNmExIDEgMCAwIDAtMSAxdjMuMzc1aC0yLjVhMSAxIDAgMCAwLTEgMVYzMGgtMS41MzZhMSAxIDAgMCAwLTEgMXY0LjM3NWExIDEgMCAwIDAgMSAxaDQuMjg2YTEgMSAwIDAgMCAxLTFWMzFhMSAxIDAgMCAwLTEtMWgtLjc1di0yLjM3NWg0LjEyNVYzMGgtLjc1YTEgMSAwIDAgMC0xIDF2NC4zNzVhMSAxIDAgMCAwIDEgMWg0LjM3NWExIDEgMCAwIDAgMS0xVjMxYTEgMSAwIDAgMC0xLTFoLTEuNjI1di0zLjM3NWExIDEgMCAwIDAtMS0xaC0xLjYyNVYyMy4yNWgxMnYyLjM3NWgtMS42MjVhMSAxIDAgMCAwLTEgMVYzMGgtMS42MjVhMSAxIDAgMCAwLTEgMXY0LjM3NWExIDEgMCAwIDAgMSAxaDQuMzc1YTEgMSAwIDAgMCAxLTFWMzFhMSAxIDAgMCAwLTEtMWgtLjc1di0yLjM3NWg0LjEyNVYzMGgtLjgxMWExIDEgMCAwIDAtMSAxdjQuMzc1YTEgMSAwIDAgMCAxIDFoNC4zNDVhMSAxIDAgMCAwIDEtMVYzMWExIDEgMCAwIDAtMS0xTTI0LjAwMSA0NEMxMi45NzIgNDQgNCAzNS4wMjggNCAyNFMxMi45NzIgNCAyNC4wMDEgNGMxMS4wMjggMCAyMCA4Ljk3MiAyMCAyMHMtOC45NzIgMjAtMjAgMjBtMC00MkMxMS44NjkgMiAyIDExLjg2OSAyIDI0czkuODY5IDIyIDIyLjAwMSAyMmMxMi4xMyAwIDIyLTkuODY5IDIyLTIycy05Ljg3LTIyLTIyLTIyIi8+PC9nPjwvc3ZnPg==" alt="Application Load Balancer"></div>
+                    <div>
+                        <h3 class="card-title">Application Load Balancer</h3>
+                        <span class="card-subtitle">ALB</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-04: 99.9% Disponibilidad</span>
+                        <span class="badge badge-req">RF-05: API Disponibilidad</span>
+                        <span class="badge badge-topic">Tema 9: Fargate + ALB</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un balanceador de carga distribuye el tráfico entrante entre varios destinos (contenedores, instancias) para que ninguno se sature y para que la caída de uno no tumbe el servicio. El ALB opera en capa 7: puede enrutar según la ruta o el host de la URL y comprueba periódicamente la salud de cada destino.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>director de tráfico</strong>. Reparte las peticiones entre las tareas de FastAPI en 2 AZs y ejecuta health checks. Si un contenedor falla, el ALB lo retira del pool.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Servicio gestionado, escalado automático, elimina SPOF.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $18.77/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el guardia de tráfico que dirige los autos al carril con menos congestión.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzhDNEZGRiIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDggOCkiPjxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTEzLjYyNiAzNS45MnYtMi44MzdsMS43NzQgMS40MTl6bS0uMzc1LTUuN2ExLjAwMSAxLjAwMSAwIDAgMC0xLjYyNS43ODF2N2ExLjAwMSAxLjAwMSAwIDAgMCAxLjYyNS43ODJsNC4zNzQtMy41YTEgMSAwIDAgMCAwLTEuNTYyem0yNC0zLjM4M3YtMy45MjJsMS45NjIgMS45NnptNC4wODMtMi42NjgtNC4zNzYtNC4zNzVhMSAxIDAgMCAwLTEuNzA2LjcwN3YzLjM3NWgtNy42Mjd2LTkuNWExIDEgMCAwIDAtMS0xaC03LjY5M3YyaDYuNjk0djguNUgxOC43NXYyaDYuODc1djguNWgtNi42OTN2Mmg3LjY5NGExIDEgMCAwIDAgMS0xdi05LjVoNy42MjV2My4zNzZhMSAxIDAgMCAwIDEuNzA4LjcwN2w0LjM3NC00LjM3NmExIDEgMCAwIDAgMC0xLjQxNG0tMjcuNzA4IDIuMTI3di0yLjg0bDEuNzc0IDEuNDJ6bS0uMzc1LTUuNzAxYTEgMSAwIDAgMC0xLjYyNS43OHY3LjAwMmExLjAwMSAxLjAwMSAwIDAgMCAxLjYyNS43OGw0LjM3NC0zLjVhMSAxIDAgMCAwIDAtMS41NjJ6bS4zNzUtNC44di0yLjgzOGwxLjc3NCAxLjQxOXptLS4zNzUtNS43YTEuMDAxIDEuMDAxIDAgMCAwLTEuNjI1Ljc4MXY3YTEuMDAxIDEuMDAxIDAgMCAwIDEuNjI1Ljc4bDQuMzc0LTMuNWExIDEgMCAwIDAgMC0xLjU2MXpNMjQgNDQuMDAzQzEyLjk3MSA0NC4wMDMgNCAzNS4wMyA0IDI0UzEyLjk3MyA0IDI0IDRjMTEuMDMgMCAyMC4wMDIgOC45NzMgMjAuMDAyIDIwIDAgMTEuMDMtOC45NzMgMjAuMDAzLTIwLjAwMiAyMC4wMDNNMjQgMkMxMS44NjggMiAyIDExLjg2OSAyIDI0YzAgMTIuMTMzIDkuODY5IDIyLjAwMyAyMiAyMi4wMDMgMTIuMTMzIDAgMjIuMDAyLTkuODcgMjIuMDAyLTIyLjAwMlMzNi4xMzMgMiAyNCAyIi8+PC9nPjwvc3ZnPg==" alt="NAT Gateway"></div>
+                    <div>
+                        <h3 class="card-title">NAT + Internet Gateway</h3>
+                        <span class="card-subtitle">Red VPC</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking (VPC)</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Una VPC (Virtual Private Cloud) es una red privada aislada dentro de AWS, dividida en subredes públicas y privadas. El <strong>Internet Gateway</strong> conecta la VPC con Internet en ambos sentidos; el <strong>NAT Gateway</strong> (Network Address Translation) permite que recursos de subredes privadas salgan a Internet sin poder recibir conexiones iniciadas desde fuera.</p></div>
+                    <p><strong>Rol clave:</strong> El <strong>Internet Gateway</strong> permite la entrada al ALB. El <strong>NAT Gateway</strong> da salida a Internet a los servicios en subredes privadas (FastAPI, Spark, Lambda) sin exponerlos directamente.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Aislamiento de red estándar en AWS. NAT Gateway es gestionado y altamente disponible. En esta estimación se usó 1 NAT Gateway (no 2), por lo que la subred privada queda sin redundancia entre zonas de disponibilidad si esa AZ falla — un trade-off de costo documentado, no un descuido.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $35.10/mes (VPC: 1 NAT Gateway, 1 AZ)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> El Internet Gateway es la puerta principal; el NAT es la puerta trasera de servicio.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVZpcnR1YWwtUHJpdmF0ZS1DbG91ZF80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjOGM0ZmZmIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTQ4IDMzLjk3Ny0zLjUwMS0xLjQ2OXYxNC4zN2MzLjQwNy0uNzMgMy40OTktNC42OTcgMy41MDEtNC44ODN6bS01LjUwMSAxMi45NDZWMzIuNTA4TDM5IDMzLjk3OHY4LjAyNmMuMDA4LjQ2Mi4xODMgNC4zMzUgMy40OTkgNC45Mm0uNjEzLTE2Ljg0YTEgMSAwIDAgMSAuNzc0LS4wMDJsNS41MDEgMi4zMWExIDEgMCAwIDEgLjYxMy45MjF2OC42OTJjLS4wMjIgMi40MjctMS40MzggNy02LjYzIDctNC45NzcgMC02LjM0NC00LjU3Mi02LjM3LTYuOTg5di04LjcwM2MwLS40MDMuMjQxLS43NjYuNjEzLS45MjJ6bTguODg4LjcxLTguNTA4LTMuN0wzNSAzMC42Njd2MTAuMzU3Yy0uMDAxLjA2NS0uMDM3IDQuOTg0IDIuODA3IDcuODcgMS4zOCAxLjQgMy4yNTIgMi4xMSA1LjU2MyAyLjExIDguNDM4IDAgOC42MjYtOS41OCA4LjYzLTkuOTg3em0yLS42NTd2MTAuODljLS4wMjcgNC4xNDctMi4yODQgMTEuOTc4LTEwLjYzIDExLjk3OC0yLjg3MiAwLTUuMjI1LS45MTQtNi45OTctMi43MTYtMy40MzItMy40OS0zLjM3Ny05LjA0NS0zLjM3My05LjI4VjMwLjAwNGExIDEgMCAwIDEgLjYxMi0uOTIybDkuNDk5LTRhMSAxIDAgMCAxIC43ODYuMDA1bDkuNTAxIDQuMTMyYTEgMSAwIDAgMSAuNjAyLjkxN20tMzUgNy44NjhoMTF2MkgxOWMtNC43ODQgMC04LjcyOS0zLjUyLTguOTgtOC4wMTZhNiA2IDAgMCAxLS4wMi0uNjAzYzAtNS4yOTkgMy42NTQtNy4zNDcgNS45MTktOC4xMDdhOCA4IDAgMCAxLS4wMjgtLjY1MmMwLTQuNTg3IDIuNzY3LTguOTI1IDYuNzMtMTAuNTQ3IDQuOTU5LTIuMDMgMTAuNjE0LTEuMTQyIDE0LjA3NCAyLjIwNiAxLjAyMy45OTcgMS45MDkgMi4zMTEgMi42NDggMy45MjEuOTU2LS43ODQgMi4wNDktMS4yMDIgMy4xOC0xLjIwMiAyLjcxMSAwIDUuNzU4IDIuMjkyIDYuMzc3IDYuMDU4IDIuMTY5LjI4MiA0LjAzNiAxLjU3NyA0Ljk5NiAzLjUybC0xLjc5Mi44ODdjLS43NjQtMS41NDQtMi4yOTgtMi40NjUtNC4xMDQtMi40NjVhMSAxIDAgMCAxLS45OTgtLjk0Yy0uMTk1LTMuMzAyLTIuNzI3LTUuMDYtNC40NzktNS4wNi0uOTczIDAtMS45NDEuNTctMi43MjYgMS42MDRhLjk5OS45OTkgMCAwIDEtMS43MzUtLjI2Yy0uNzM1LTIuMDAyLTEuNjY0LTMuNTU5LTIuNzYtNC42MjgtMi44OTYtMi44MDMtNy42ODctMy41MjQtMTEuOTIzLTEuNzktMy42MDQgMS40NzUtNS40ODggNS40OTEtNS40ODggOC42OTYgMCAuNC4wNTYuODc3LjEwMiAxLjI2YTEgMSAwIDAgMS0uNzUzIDEuMDljLTEuOTU3LjQ4My01LjI0IDEuOTYxLTUuMjQgNi40MSAwIC4xNS0uMDAyLjMuMDEzLjQ1LjE5NiAzLjQ3NiAzLjI2MyA2LjE2OCA2Ljk4NyA2LjE2OCIvPjwvZz48L3N2Zz4=" alt="Amazon VPC"></div>
+                    <div>
+                        <h3 class="card-title">Public IPv4 + Data Transfer</h3>
+                        <span class="card-subtitle">Direccionamiento y Salida de Datos</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Una dirección IPv4 pública es un identificador alcanzable desde Internet; desde febrero de 2024 AWS cobra cada una por hora, esté en uso o no. La transferencia de datos (<em>data transfer out</em>) es el volumen que sale de AWS hacia Internet; la entrada suele ser gratuita, la salida se factura por GB.</p></div>
+                    <p><strong>Rol clave:</strong> Son los <strong>costos de red que se olvidan con facilidad</strong>. Cada IPv4 pública (2 del ALB, 1 del NAT) se cobra por hora desde 2024, y cada GB que sale de la VPC hacia Internet (respuestas de la API, consultas externas) tiene un cargo de transferencia saliente.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> No hay forma de evitarlos sin sacrificar disponibilidad pública; se incluyen explícitamente para que la estimación no subestime el costo real (penalización CT-05 por supuestos no verificables).</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $10.95/mes (3 IPs) + $4.50/mes (50 GB salientes) = $15.45/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el peaje de la autopista: cada placa (IP) y cada kilómetro recorrido (GB) se cobra por separado.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUVsYXN0aWMtQ29udGFpbmVyLVJlZ2lzdHJ5XzQ4PC90aXRsZT48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiNlZDcxMDAiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzAuNzI2IDI5LjkyMmMtLjQ0Ny4yNi0uNzI2Ljc0NS0uNzI2IDEuMjYzdjIwLjM1bC0xNS04LjY3N1YyMy4wMWwxNy4xNzItOS45MzMgMTQuOTE2IDcuMzh6bTE4Ljk3OC05LjUwMmMwLS41MTgtLjI3OC0xLS43ODMtMS4yODhsLTE2LjA0Mi03LjkzNmExLjQ1IDEuNDUgMCAwIDAtMS40NTEtLjAwMmwtMTcuNjk5IDEwLjI0Yy0uNDQ5LjI1OS0uNzI5Ljc0My0uNzI5IDEuMjYzdjIwLjQ3NmMwIC41MTguMjc5IDEuMDAxLjcyOCAxLjI2MmwxNi4wODggOS4zMDZhMS40NSAxLjQ1IDAgMCAwIDEuNDU2LjAwMWMuNDQ5LS4yNTkuNzI4LS43NDMuNzI4LTEuMjYzdi0yMC45OGwxNi45NzgtOS44MjFjLjQ0OC0uMjU5LjcyNi0uNzQuNzI2LTEuMjU4TTUwIDQyLjk0MWwtMTIuOTk2IDguNTkyVjQ0LjQxbDYuNTk5LTQuOTk0Yy4yNS0uMTkuMzk3LS40ODYuMzk3LS44VjMwLjQ4bDYtMy40NzR6bTEuMjczLTE4LjE0MmExLjQ1IDEuNDUgMCAwIDAtMS40NTYgMGwtNi45MzggNC4wMTRjLS4yNC4xMy0uODc5LjQ3NS0uODc5IDEuMjE3djguMDg3bC02LjMzNyA0Ljc5NmExLjQ3IDEuNDcgMCAwIDAtLjY1OSAxLjIyMXY4LjQxMmMwIC41Mi4yOCAxLjAwNC43MjkgMS4yNjQuMjE4LjEyNS40NjIuMTkuNzEyLjE5LjI2NCAwIC41MzctLjA3Mi43OTQtLjIyMmwxNC4wMzYtOS4yOGMuNDQ3LS4yNi43MjUtLjc0NC43MjUtMS4yNjJWMjYuMDYzYzAtLjUyLS4yNzktMS4wMDQtLjcyNy0xLjI2NCIvPjwvZz48L3N2Zz4=" alt="Amazon ECR"></div>
+                    <div>
+                        <h3 class="card-title">Amazon ECR + GitHub Actions</h3>
+                        <span class="card-subtitle">CI/CD y Registro</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 8: ECR + ECS</span>
+                        <span class="badge badge-topic">Tema 17: CI/CD Aplicaciones</span>
+                        <span class="badge badge-req">CT-04: Pipeline bloquea merge</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un registro de contenedores almacena y versiona imágenes Docker para que los servicios de cómputo las descarguen al desplegar. ECR (Elastic Container Registry) es el registro privado de AWS. GitHub Actions es una plataforma de CI/CD: ejecuta automáticamente pruebas, build y despliegue cada vez que hay cambios en el repositorio.</p></div>
+                    <p><strong>Rol clave:</strong> <strong>Fábrica de contenedores</strong>. GitHub Actions empaqueta el código en imágenes Docker y las sube a ECR. ECS descarga estas imágenes para ejecutar FastAPI, Spark y RabbitMQ.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja-Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> ECR privado por defecto, sin límites de pulls, integrado con IAM.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.50/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> GitHub Actions es la cocina; ECR es la nevera donde se guardan los platos listos.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CAPA 2: SPEED LAYER -->
+    <section class="layer-section layer-2">
+        <h2 class="layer-title"><i class="fa-solid fa-bolt"></i> Capa 2: Speed Layer (Capa de Velocidad)</h2>
+        <div class="glossary-grid">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUZhcmdhdGVfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2VkNzEwMCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi40NjcgNDYuMzgydi0zLjc2NGwxLjk5NC0xdjMuNzY0em0tMy45ODctNC43NjQgMS45OTQgMXYzLjc2NGwtMS45OTQtMXptLTQuOTgzIDkuNzY0di0zLjc2NGwxLjk5My0xdjMuNzY0em0tMy45ODctNC43NjQgMS45OTMgMXYzLjc2NGwtMS45OTMtMXptLTQuOTg0LS4yMzZ2LTMuNzY0bDEuOTk0LTF2My43NjR6bS0zLjk4Ny00Ljc2NCAxLjk5NCAxdjMuNzY0bC0xLjk5NC0xem0yLjk5LTIuNSAxLjc1OS44ODItMS43NTguODgyTDIxLjc3IDQwem04Ljk3MSA1IDEuNzU4Ljg4Mi0xLjc1OC44ODJMMzAuNzQyIDQ1em04Ljk3LTVMNDMuMjMgNDBsLTEuNzU5Ljg4MkwzOS43MTIgNDB6bTQuNDMzLS4wMTItMy45ODctMmEuOTkuOTkgMCAwIDAtLjg5MSAwbC0zLjk4NyAyYTEgMSAwIDAgMC0uNTUxLjg5NHYzLjg4MmwtMy41NDEtMS43NzZhLjk5Ljk5IDAgMCAwLS44OTIgMGwtMy41NCAxLjc3NlY0MGExIDEgMCAwIDAtLjU1Mi0uODk0bC0zLjk4Ny0yYS45OS45OSAwIDAgMC0uODkgMGwtMy45ODggMmExIDEgMCAwIDAtLjU1Ljg5NHY2YzAgLjM3OS4yMTIuNzI1LjU1Ljg5NWwzLjk4NyAyYTEgMSAwIDAgMCAuODkxIDBsMy41NDEtMS43NzdWNTFjMCAuMzc5LjIxNC43MjUuNTUyLjg5NWwzLjk4NiAyYTEgMSAwIDAgMCAuODkyIDBsMy45ODYtMmMuMzM4LS4xNy41NTItLjUxNi41NTItLjg5NXYtMy44ODJsMy41NCAxLjc3N2ExIDEgMCAwIDAgLjg5MiAwbDMuOTg3LTJjLjMzOC0uMTcuNTUtLjUxNi41NS0uODk1di02YTEgMSAwIDAgMC0uNTUtLjg5NE01NCAyOC4wOWMwIDUuMTAzLTExLjA3NyA3Ljg1Ni0yMS41IDcuODU2UzExIDMzLjE5MyAxMSAyOC4wOWMwLTIuNDYxIDIuNjgtNC42MTYgNy41NDctNi4wNjdsLjU2OCAxLjkxN2MtMy43NzYgMS4xMjYtNi4xMjIgMi43MTYtNi4xMjIgNC4xNSAwIDIuNzY0IDguMzQzIDUuODU2IDE5LjUwNyA1Ljg1NnMxOS41MDctMy4wOTIgMTkuNTA3LTUuODU2YzAtMS40MzQtMi4zNDYtMy4wMjQtNi4xMjItNC4xNWwuNTY4LTEuOTE3QzUxLjMyIDIzLjQ3NCA1NCAyNS42MjkgNTQgMjguMDlNMzIuNSAxMi4wNjQgNDAuNTQ3IDE1IDMyLjUgMTcuOTM2IDI0LjQ1MyAxNXptOC44NjggMTYuNTg0Yy0xLjU1Ni43LTQuMTU1IDEuNTE2LTcuODcxIDEuNjQ1VjE5LjcwMWw4Ljk3LTMuMjczdjEwLjQ4NWMwIC43NTQtLjQzMSAxLjQzNS0xLjEgMS43MzVtLTE4LjgzNS0xLjczNVYxNi40MjhsOC45NyAzLjI3M3YxMC41OTJjLTMuNzE2LS4xMjktNi4zMTUtLjk0NS03Ljg3LTEuNjQ1LS42NjktLjMtMS4xLS45ODEtMS4xLTEuNzM1bS4yODMgMy41NmMxLjg3Ljg0MiA1LjA3IDEuODQ2IDkuNjg0IDEuODQ2IDQuNjE1IDAgNy44MTMtMS4wMDQgOS42ODQtMS44NDYgMS4zODMtLjYyMiAyLjI3Ny0yLjAxOSAyLjI3Ny0zLjU2VjE1YTEgMSAwIDAgMC0uNjU2LS45NGwtMTAuOTY0LTRhMSAxIDAgMCAwLS42ODIgMGwtMTAuOTY0IDRhMSAxIDAgMCAwLS42NTYuOTR2MTEuOTEzYzAgMS41NDEuODk0IDIuOTM4IDIuMjc3IDMuNTYiLz48L2c+PC9zdmc+" alt="AWS Fargate"></div>
+                    <div>
+                        <h3 class="card-title">ECS Fargate · FastAPI</h3>
+                        <span class="card-subtitle">API en Tiempo Real</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-01 al RF-07</span>
+                        <span class="badge badge-req">RN-03, RN-04, RN-07 (Sobreventa/Cancelación)</span>
+                        <span class="badge badge-req">RNF-01: Latencia p95 ≤ 250ms</span>
+                        <span class="badge badge-req">RNF-02: Consistencia</span>
+                        <span class="badge badge-topic">Temas 1, 2, 8, 9</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>ECS (Elastic Container Service) orquesta contenedores; Fargate es su modo serverless: defines CPU y memoria por tarea y AWS gestiona los servidores por debajo. FastAPI es un framework web de Python, asíncrono y de alto rendimiento, que genera documentación OpenAPI automáticamente a partir del código.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>cerebro de las reservas</strong>. Aplica reglas de negocio en milisegundos (límites de sobreventa, penalizaciones). Escribe en RDS en una transacción atómica para evitar sobreventa (CA-08: 50 solicitudes concurrentes).</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Lambda):</strong> Fargate permite conexiones persistentes y procesos largos. FastAPI es asíncrono y rápido.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $72.08/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un mesero ultra rápido que verifica disponibilidad y confirma la reserva en el acto.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iI0ZGNjYwMCIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIGZpbGw9IiNmZmYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0IDE0KSBzY2FsZSgxLjUpIj48cGF0aCBkPSJNMjMuMDM1IDkuNjAxaC03LjY3N2EuOTU2Ljk1NiAwIDAxLS45NjItLjk2MlYuOTYyYS45NTYuOTU2IDAgMDAtLjk2Mi0uOTU2SDEwLjU2YS45NTYuOTU2IDAgMDAtLjk2Mi45NTZWOC42NGEuOTU2Ljk1NiAwIDAxLS45NjIuOTYySDUuNzYyYS45NTYuOTU2IDAgMDEtLjk2MS0uOTYyVi45NjJBLjk1Ni45NTYgMCAwMDMuODM5IDBILjk1OWEuOTU2Ljk1NiAwIDAwLS45NTYuOTYydjIyLjA3NkEuOTU2Ljk1NiAwIDAwLjk2NSAyNGgyMi4wN2EuOTU2Ljk1NiAwIDAwLjk2Mi0uOTYyVjEwLjU4YS45NTYuOTU2IDAgMDAtLjk2Mi0uOTh6bS0zLjg2IDguMTUyYTEuNDM3IDEuNDM3IDAgMDEtMS40MzcgMS40NDNoLTEuOTI0YTEuNDM3IDEuNDM3IDAgMDEtMS40MzYtMS40NDN2LTEuOTE3YTEuNDM3IDEuNDM3IDAgMDExLjQzNi0xLjQ0M2gxLjkyNGExLjQzNyAxLjQzNyAwIDAxMS40MzcgMS40NDN6Ii8+PC9nPjwvc3ZnPg==" alt="RabbitMQ"></div>
+                    <div>
+                        <h3 class="card-title">RabbitMQ</h3>
+                        <span class="card-subtitle">Message Broker</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-05: Ningún evento perdido</span>
+                        <span class="badge badge-req">CA-09: Eventos fuera de orden</span>
+                        <span class="badge badge-topic">Tema 10: RabbitMQ</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un message broker es un intermediario que recibe mensajes de productores, los guarda en colas y los entrega a consumidores, desacoplando a quien envía de quien procesa. RabbitMQ es un broker open source basado en AMQP: soporta exchanges, enrutamiento por claves, colas durables y confirmaciones (ACK) para no perder mensajes.</p></div>
+                    <p><strong>Rol clave:</strong> Es la <strong>tubería de eventos</strong>. Recibe eventos del Channel Manager (F2) y los encola durablemente (con ACK). Evita la pérdida de reservas si el consumidor se satura. Usa 2 vhosts (reservas y Airflow) para ahorrar costos.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (SQS):</strong> Enrutamiento flexible, persistencia de mensajes, ideal para eventos fuera de orden.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: incluido en el host EC2 compartido (ver tarjeta "Shared Backend" en Capa 3) — no se factura aparte, RabbitMQ no corre en Fargate</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la oficina de correos que clasifica y guarda las cartas hasta que el cartero las procesa.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUZhcmdhdGVfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2VkNzEwMCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi40NjcgNDYuMzgydi0zLjc2NGwxLjk5NC0xdjMuNzY0em0tMy45ODctNC43NjQgMS45OTQgMXYzLjc2NGwtMS45OTQtMXptLTQuOTgzIDkuNzY0di0zLjc2NGwxLjk5My0xdjMuNzY0em0tMy45ODctNC43NjQgMS45OTMgMXYzLjc2NGwtMS45OTMtMXptLTQuOTg0LS4yMzZ2LTMuNzY0bDEuOTk0LTF2My43NjR6bS0zLjk4Ny00Ljc2NCAxLjk5NCAxdjMuNzY0bC0xLjk5NC0xem0yLjk5LTIuNSAxLjc1OS44ODItMS43NTguODgyTDIxLjc3IDQwem04Ljk3MSA1IDEuNzU4Ljg4Mi0xLjc1OC44ODJMMzAuNzQyIDQ1em04Ljk3LTVMNDMuMjMgNDBsLTEuNzU5Ljg4MkwzOS43MTIgNDB6bTQuNDMzLS4wMTItMy45ODctMmEuOTkuOTkgMCAwIDAtLjg5MSAwbC0zLjk4NyAyYTEgMSAwIDAgMC0uNTUxLjg5NHYzLjg4MmwtMy41NDEtMS43NzZhLjk5Ljk5IDAgMCAwLS44OTIgMGwtMy41NCAxLjc3NlY0MGExIDEgMCAwIDAtLjU1Mi0uODk0bC0zLjk4Ny0yYS45OS45OSAwIDAgMC0uODkgMGwtMy45ODggMmExIDEgMCAwIDAtLjU1Ljg5NHY2YzAgLjM3OS4yMTIuNzI1LjU1Ljg5NWwzLjk4NyAyYTEgMSAwIDAgMCAuODkxIDBsMy41NDEtMS43NzdWNTFjMCAuMzc5LjIxNC43MjUuNTUyLjg5NWwzLjk4NiAyYTEgMSAwIDAgMCAuODkyIDBsMy45ODYtMmMuMzM4LS4xNy41NTItLjUxNi41NTItLjg5NXYtMy44ODJsMy41NCAxLjc3N2ExIDEgMCAwIDAgLjg5MiAwbDMuOTg3LTJjLjMzOC0uMTcuNTUtLjUxNi41NS0uODk1di02YTEgMSAwIDAgMC0uNTUtLjg5NE01NCAyOC4wOWMwIDUuMTAzLTExLjA3NyA3Ljg1Ni0yMS41IDcuODU2UzExIDMzLjE5MyAxMSAyOC4wOWMwLTIuNDYxIDIuNjgtNC42MTYgNy41NDctNi4wNjdsLjU2OCAxLjkxN2MtMy43NzYgMS4xMjYtNi4xMjIgMi43MTYtNi4xMjIgNC4xNSAwIDIuNzY0IDguMzQzIDUuODU2IDE5LjUwNyA1Ljg1NnMxOS41MDctMy4wOTIgMTkuNTA3LTUuODU2YzAtMS40MzQtMi4zNDYtMy4wMjQtNi4xMjItNC4xNWwuNTY4LTEuOTE3QzUxLjMyIDIzLjQ3NCA1NCAyNS42MjkgNTQgMjguMDlNMzIuNSAxMi4wNjQgNDAuNTQ3IDE1IDMyLjUgMTcuOTM2IDI0LjQ1MyAxNXptOC44NjggMTYuNTg0Yy0xLjU1Ni43LTQuMTU1IDEuNTE2LTcuODcxIDEuNjQ1VjE5LjcwMWw4Ljk3LTMuMjczdjEwLjQ4NWMwIC43NTQtLjQzMSAxLjQzNS0xLjEgMS43MzVtLTE4LjgzNS0xLjczNVYxNi40MjhsOC45NyAzLjI3M3YxMC41OTJjLTMuNzE2LS4xMjktNi4zMTUtLjk0NS03Ljg3LTEuNjQ1LS42NjktLjMtMS4xLS45ODEtMS4xLTEuNzM1bS4yODMgMy41NmMxLjg3Ljg0MiA1LjA3IDEuODQ2IDkuNjg0IDEuODQ2IDQuNjE1IDAgNy44MTMtMS4wMDQgOS42ODQtMS44NDYgMS4zODMtLjYyMiAyLjI3Ny0yLjAxOSAyLjI3Ny0zLjU2VjE1YTEgMSAwIDAgMC0uNjU2LS45NGwtMTAuOTY0LTRhMSAxIDAgMCAwLS42ODIgMGwtMTAuOTY0IDRhMSAxIDAgMCAwLS42NTYuOTR2MTEuOTEzYzAgMS41NDEuODk0IDIuOTM4IDIuMjc3IDMuNTYiLz48L2c+PC9zdmc+" alt="AWS Fargate"></div>
+                    <div>
+                        <h3 class="card-title">ECS Fargate · Consumer</h3>
+                        <span class="card-subtitle">Consumidor de Eventos</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-01, RF-07</span>
+                        <span class="badge badge-req">RN-08: Duplicados entre canales</span>
+                        <span class="badge badge-req">CA-09: Out-of-order events</span>
+                        <span class="badge badge-topic">Temas 8, 9</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un consumidor (consumer) es un proceso de larga duración que escucha una cola, toma cada mensaje, lo procesa y confirma (ACK) que terminó; si falla antes de confirmar, el broker vuelve a entregar el mensaje. Ejecutarlo en Fargate permite mantener la conexión abierta de forma continua sin administrar servidores.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>aplicador de eventos</strong>. Lee mensajes de RabbitMQ, aplica cambios de inventario en RDS (misma transacción atómica que FastAPI) y copia el evento crudo a S3 Bronze para auditoría.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Lambda):</strong> Conexiones persistentes a RabbitMQ, procesos de larga duración.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $36.04/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el cartero que lee, actualiza el inventario y archiva una copia en el sótano.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVJEU180ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjYzkyNWQxIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTU0IDExdjhoLTJ2LTUuNTg2bC02LjI5MyA2LjI5My0xLjQxNC0xLjQxNEw1MC41ODYgMTJoLTUuNDYxdi0ySDUzYTEgMSAwIDAgMSAxIDFtLTQyIDcuODc1aC0yVjExYTEgMSAwIDAgMSAxLTFoOHYyaC01LjU4Nmw2LjI5MyA2LjI5My0xLjQxNCAxLjQxNEwxMiAxMy40MTR6bTcuNzA3IDI2LjgzMkwxMy40MTQgNTJoNS40NjF2MkgxMWExIDEgMCAwIDEtMS0xdi04aDJ2NS41ODZsNi4yOTMtNi4yOTN6TTUxLjUgMzEuNzgxYzAtMi40MjktMi44NjYtNC44NDktNy42NjctNi40NzRsLjY0MS0xLjg5NGM1LjczNiAxLjk0MSA5LjAyNiA0Ljk5MSA5LjAyNiA4LjM2OHMtMy4yOSA2LjQyNy05LjAyNiA4LjM2OWwtLjY0MS0xLjg5NWM0LjgwMS0xLjYyNCA3LjY2Ny00LjA0NSA3LjY2Ny02LjQ3NG0tMzguOTU3IDBjMCAyLjMyNCAyLjY4MSA0LjY3OSA3LjE3MiA2LjNsLS42OCAxLjg4Yy01LjM5Ni0xLjk0Ny04LjQ5Mi00LjkyOC04LjQ5Mi04LjE4czMuMDk2LTYuMjMzIDguNDkyLTguMThsLjY4IDEuODgxYy00LjQ5MSAxLjYyMS03LjE3MiAzLjk3Ni03LjE3MiA2LjI5OU01MiA0NS4xMjVoMlY1M2ExIDEgMCAwIDEtMSAxaC04di0yaDUuNTg2bC02LjI5My02LjI5MyAxLjQxNC0xLjQxNEw1MiA1MC41ODZ6TTMyLjAyMiAzMS40MDJjLTUuMDIzIDAtNy44OTYtMS4zNDMtOC4wMjItMS45MTl2LTMuMjI2YzIuMTU5IDEuMDA5IDUuNjA5IDEuMzM2IDggMS4zMzZzNS44NDEtLjMyNyA4LTEuMzM2djMuMjI2Yy0uMTA2LjU3NC0yLjk0OSAxLjkxOS03Ljk3OCAxLjkxOW0wIDUuNzI4Yy01LjAyMyAwLTcuODk2LTEuMzQ0LTguMDIyLTEuOTJ2LTMuMjU0YzEuOTUzLjk4MSA1LjA1NSAxLjQ0NiA4LjAyMiAxLjQ0NiAyLjk1MSAwIDYuMDMzLS40NjQgNy45NzgtMS40NDJ2My4yNWMtLjEwNi41NzUtMi45NDggMS45Mi03Ljk3OCAxLjkyTTMyIDQyLjI2OGMtNS4wNSAwLTcuODk2LTEuMzUxLTgtMS45MjJ2LTIuNjYzYzEuOTUzLjk4MiA1LjA1NSAxLjQ0NyA4LjAyMiAxLjQ0NyAyLjk1MSAwIDYuMDMzLS40NjQgNy45NzgtMS40NDN2Mi42NTVjLS4xMDQuNTc1LTIuOTUgMS45MjYtOCAxLjkyNm0wLTIwLjA3NWM0Ljk3MSAwIDcuNjQyIDEuMTc3IDcuOTgyIDEuNzAxLS4zNC41MjMtMy4wMTEgMS42OTktNy45ODIgMS42OTktNS4wOTEgMC03Ljc2Ny0xLjIzMi04LTEuNjQ0di0uMDE5Yy4yMzMtLjUwNCAyLjkwOS0xLjczNyA4LTEuNzM3bTAtMmMtMy43MTQgMC0xMCAuNzgtMTAgMy43MDF2MTYuNDUyYzAgMi42OTUgNS4xODQgMy45MjIgMTAgMy45MjJzMTAtMS4yMjcgMTAtMy45MjJWMjMuODk0YzAtMi45MjEtNi4yODYtMy43MDEtMTAtMy43MDEiLz48L2c+PC9zdmc+" alt="Amazon RDS"></div>
+                    <div>
+                        <h3 class="card-title">Amazon RDS PostgreSQL</h3>
+                        <span class="card-subtitle">Multi-AZ</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-02: Inventario disponible</span>
+                        <span class="badge badge-req">RNF-02: Consistencia</span>
+                        <span class="badge badge-req">CA-08: Cero doble venta</span>
+                        <span class="badge badge-topic">Tema 7: S3 + RDS</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>RDS (Relational Database Service) es una base de datos relacional gestionada: AWS se encarga de backups, parches y réplicas. PostgreSQL es el motor, con transacciones ACID (atómicas, consistentes, aisladas y durables). <strong>Multi-AZ</strong> mantiene una réplica síncrona en otra zona de disponibilidad que toma el control automáticamente si la principal falla.</p></div>
+                    <p><strong>Rol clave:</strong> Es la <strong>fuente de verdad operativa</strong>. Almacena inventario, tarifas, reservas y límites de sobreventa para los 28 hoteles. Garantiza ACID para evitar vender la misma habitación dos veces.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (DynamoDB):</strong> Soporta transacciones ACID multi-tabla y joins, esenciales para consultas de disponibilidad.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $117.17/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja registradora blindada que nunca pierde una transacción.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CAPA 3: BATCH LAYER -->
+    <section class="layer-section layer-3">
+        <h2 class="layer-title"><i class="fa-solid fa-clock"></i> Capa 3: Batch Layer (Capa Diaria)</h2>
+        <div class="glossary-grid">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzAxN0NFRSIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIGZpbGw9IiNmZmYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0IDE0KSBzY2FsZSgxLjUpIj48cGF0aCBkPSJNMTcuMTk1IDE2LjgyMmw0LjAwMi00LjEwMkMyMy41NSAxMC4zMDggMjMuOTM0IDUuMTU0IDI0IC40M2EuMzk2LjM5NiAwIDAgMC0uMjQ2LS4zNzMuMzkyLjM5MiAwIDAgMC0uNDM3LjA5bC02LjQ5NSA2LjY1OC00LjEwMi00LjAwM0MxMC4zMDkuNDUgNS4xNTQuMDY2LjQzIDBILjQyM2EuMzk3LjM5NyAwIDAgMC0uMjc3LjY4M2w2LjY1OCA2LjQ5NC00LjAwMyA0LjEwM0MuNDUgMTMuNjkyLjA2NSAxOC44NDYgMCAyMy41N2EuMzk4LjM5OCAwIDAgMCAuNjgzLjI4Mmw2LjQ5NC02LjY1NyAzLjkzNCAzLjgzNy4xNy4xNjVjMi40MSAyLjM1MyA3LjU2NSAyLjczNyAxMi4yODggMi44MDNoLjAwNmEuMzk3LjM5NyAwIDAgMCAuMjc3LS42ODNsLTYuNjU3LTYuNDk1em0tLjQwOS05LjQ3NmMuMDQuMTE1LjA1LjI0LjAzMS4zNDQtLjE3Ljk2LTEuNTkzIDIuNTM4LTQuMzA0IDMuODdhLjU5Ny41OTcgMCAwIDAtLjA4LS4wNzljMS40MzItMy4xNTUgMS44MjgtNS42MSAxLjE3NS03LjMyMmwzLjA1OCAyLjk4NC4xMi4yMDN6bS0uMTMxIDkuNDRhLjczLjczIDAgMCAxLS4zNDcuMDMxYy0uOTYtLjE3MS0yLjUzNy0xLjU5NC0zLjg3LTQuMzA3YS42NTYuNjU2IDAgMCAwIC4wOC0uMDc4bC0uMDAxLjAwMWMzLjE1NSAxLjQzMiA1LjYxIDEuODMgNy4zMjQgMS4xNzRsLTIuOTY5IDMuMDQzTTIzLjU2OC4zOTJhLjA1LjA1IDAgMCAxIC4wNTItLjAxMWMuMDE4LjAwNi4wMy4wMjQuMDI5LjA0My0uMDY1IDQuNjU1LS40MzcgOS43MjYtMi43MDMgMTIuMDUtMS41MyAxLjU2NS00LjMyNiAxLjQxOS04LjI4My0uMzc3LjAwNi0uMDM3LjAyMS0uMDcuMDItLjEwOCAwLS4wNDQtLjAxNy0uMDgyLS4wMjYtLjEyMyAyLjgzLTEuMzkgNC4zMTUtMy4wMzcgNC41MDYtNC4xMTUuMDU3LS4zMjItLjAwOS0uNTQyLS4xMDItLjY4OGw2LjUwNy02LjY3Vi4zOTJ6TS4zOTMuNDNBLjA0NS4wNDUgMCAwIDEgLjM4Mi4zOEMuMzkuMzYuNDAzLjM0My40MjUuMzVjNC42NTUuMDY1IDkuNzI3LjQzOCAxMi4wNSAyLjcwM2wuMDAyLjAwMmMxLjU2IDEuNTI3IDEuNDE1IDQuMzIzLS4zNzkgOC4yOC0uMDMzLS4wMDUtLjA2Mi0uMDItLjA5Ny0uMDJoLS4wMDhjLS4wNDUuMDAxLS4wODQuMDE5LS4xMjYuMDI3LTEuMzktMi44My0zLjAzNy00LjMxNC00LjExNS00LjUwNi0uMzIzLS4wNTctLjU0Mi4wMS0uNjg4LjEwM0wuMzkzLjQzem0xMS45NCAxMS41NjNhLjMzMS4zMzEgMCAwIDEtLjMyNy4zMzVIMTJhLjMzMi4zMzIgMCAwIDEtLjAwNC0uNjYxYy4xNzIuMDE2LjMzMy4xNDQuMzM1LjMyNmguMDAyem0tNS4xMiA0LjY2MWEuNzIyLjcyMiAwIDAgMS0uMDMtLjM0NWMuMTctLjk2IDEuNTk1LTIuNTQgNC4zMDktMy44NzMuMDEzLjAxNi4wMTkuMDM1LjAzMy4wNS4wMTMuMDEyLjAzLjAxNy4wNDQuMDI4LTEuNDM0IDMuMTU4LTEuODMgNS42MTMtMS4xNzcgNy4zMjZsLTMuMDQxLTIuOTY3bS0uMDA2LTkuNjU5YS43MzUuNzM1IDAgMCAxIC4zNDUtLjAzMWMuOTYxLjE3IDIuNTQgMS41OTQgMy44NzEgNC4zMDZhLjU5Ny41OTcgMCAwIDAtLjA3OS4wOGMtMi4xNjctLjk4My00LjAwNy0xLjQ4NC01LjQ5OC0xLjQ4NC0uNjggMC0xLjI4OS4xMDMtMS44MjUuMzA4TDcuMTI4IDcuMzVNLjQzIDIzLjYwN2MtLjAxOC4wMTgtLjAzOC4wMTUtLjA1Mi4wMS0uMDE5LS4wMDctLjAyOC0uMDIxLS4wMjgtLjA0My4wNjUtNC42NTQuNDM3LTkuNzI1IDIuNzAzLTEyLjA0OSAxLjUyNy0xLjU2NSA0LjMyNS0xLjQxOSA4LjI4Ni4zNzgtLjAwNi4wMzUtLjAyLjA2Ny0uMDIuMTA0IDAgLjA0My4wMTguMDgzLjAyNi4xMjQtMi44MzEgMS4zOTEtNC4zMTcgMy4wNC00LjUxIDQuMTE3LS4wNTcuMzIyLjAxLjU0Mi4xMDMuNjg4TC40MyAyMy42MDd6bTIzLjE0NC4wNDJjLTQuNjU1LS4wNjUtOS43MjYtLjQzNy0xMi4wNS0yLjcwM2wtLjAwNS0uMDA2Yy0xLjU2LTEuNTI2LTEuNDEyLTQuMzIyLjM4My04LjI3OS4wMzMuMDA1LjA2NC4wMi4wOTguMDJoLjAwOWMuMDQzIDAgLjA4LS4wMTguMTIyLS4wMjcgMS4zOSAyLjgzMiAzLjAzNiA0LjMxNyA0LjExNSA0LjUxLjA4My4wMTQuMTYuMDIxLjIzLjAyMWEuNzc2Ljc3NiAwIDAgMCAuNDUtLjEzM2w2LjY4IDYuNTE2Yy4wMi4wMi4wMTYuMDQuMDEuMDUyYS4wNDIuMDQyIDAgMCAxLS4wNDIuMDI5eiIvPjwvZz48L3N2Zz4=" alt="Apache Airflow"></div>
+                    <div>
+                        <h3 class="card-title">Airflow con Celery</h3>
+                        <span class="card-subtitle">Orquestador Batch</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RN-05: Precios diarios</span>
+                        <span class="badge badge-req">RNF-03: Precios antes de las 06:00</span>
+                        <span class="badge badge-topic">Temas 11, 12</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Apache Airflow es un orquestador de flujos de trabajo: define pipelines como DAGs (grafos dirigidos acíclicos) en Python, con dependencias, horarios y reintentos. El <strong>CeleryExecutor</strong> reparte las tareas entre varios workers usando un broker de mensajes (aquí RabbitMQ) como cola.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>director de orquesta</strong>. Programa las tareas diarias: extracción de APIs (Lambda), copia a S3, Jobs de Spark, Crawler de Glue y el retorno de precios a RDS. Celery distribuye las tareas.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Alta</span></p>
+                    <p><strong>Ventajas vs. Alternativas (MWAA):</strong> Airflow en EC2 ahorra frente a MWAA + Amazon MQ gestionados (ver comparativa en la tarjeta "Shared Backend").</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: incluido en el host EC2 compartido (ver tarjeta "Shared Backend" en esta misma capa) — no se factura aparte</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el director de orquesta que coordina a todos los músicos (workers) para que la sinfonía suene perfecta.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iI0UyNUExQyIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIGZpbGw9IiNmZmYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0IDE0KSBzY2FsZSgxLjUpIj48cGF0aCBkPSJNMTAuODEyIDBjLS40MjUuMDEzLS44NDUuMjE1LTEuMTk2LjYwNWEzLjU5MyAzLjU5MyAwIDAwLS40OTMuNzIyYy0uMzU1LjY2Ny0uNDI1IDEuNDE1LS41NTYgMi4xNDNhNTUxLjkgNTUxLjkgMCAwMC0uNzI2IDQuMDg3Yy0uMDI3LjE2LS4wOTYuMjI3LS4yNDQuMjczQzUuODMgOC4zODYgNC4wNiA4Ljk0IDIuMyA5LjUxNGMtLjM4Ny4xMjUtLjc3My4yODktMS4xMTQuNTA2LTEuMDQyLjY2NS0xLjE5NiAxLjc1My0uNDE1IDIuNzEuMzQ2LjQyMi43OS43MTUgMS4yODQuOTM2IDEuMS40OSAyLjIwMi45NzYgMy4zIDEuNDcuMDE5LjAxLjAzNi4wMTMuMDUzLjAxOWgtLjAwNGwxLjMwNi41MzVjMCAuMDIzLjAwMi4wNDUgMCAuMDczLS4yIDIuMDMtLjM5IDQuMDYzLS41OCA2LjA5NS0uMDQuNDE5LS4wMTIuODMxLjEzNCAxLjIzLjMxNy44NyAxLjA2NSAxLjE0OCAxLjg4MS43MDEuMzcyLS4yMDQuNjY2LS40OTcuOTM3LS44MTggMS4zNzItMS42MjMgMi43NDYtMy4yNDQgNC4xMTMtNC44NzIuMTExLS4xMzMuMjA1LS4xNS4zNjMtLjA5OC4zNDkuMTE3LjY5Ny4yMzEgMS4wNDUuMzQ3aC4wMDFjLjAyLjAxMi4wNDUuMDIuMDczLjAzbC4xNDIuMDQyYzEuMjQ4LjQxNiAyLjY4Ljc3NSAzLjkyOSAxLjE5LjQuMTMyLjYyMi4xNjQgMS4wNDUuMDk4LjMxMS0uMDQ4LjU5Mi0uMDYyLjgyOC0uMjM2LjYwMi0uMzMuOTk1LS45NTcuOTg4LTEuNjgyLS4wMDUtLjQyNy0uMTU0LS44MTMtLjM1LTEuMTg2LS44Mi0xLjU1Ni0xLjYzNy0zLjExMy0yLjQ2MS00LjY2Ni0uMDc4LS4xNDgtLjA3Ni0uMjQzLjAzNy0uMzc1IDEuMzgxLTEuNjE1IDIuNzU2LTMuMjM2IDQuMTMzLTQuODU1LjI3Mi0uMzIuNTEzLS42NTguNjUzLTEuMDU4LjMwOC0uODc4LS4wOS0xLjU3LTEtMS43NDFhMi43ODMgMi43ODMgMCAwMC0xLjIzNS4wNjljLTEuOTc0LjUyMS0zLjk0NyAxLjA0MS01LjkxOCAxLjU3LS4xNzUuMDQ3LS4yNi4wMTUtLjM1NS0uMTQ0YTM1My4wOCAzNTMuMDggMCAwMC0yLjQyMS00LjAxOCA0LjYxIDQuNjEgMCAwMC0uNjUyLS44NDljLS4zNzEtLjM3LS44MDItLjU0OS0xLjIyNy0uNTM2em0uMTcyIDMuNzAzYS41OTIuNTkyIDAgMDEuMTg5LjIxMWMuODcgMS40NDYgMS43NDIgMi44OSAyLjYwOSA0LjMzOC4wNy4xMTguMTM1LjE2LjI3Ny4xMjEgMS41MjUtLjQxIDMuMDUyLS44MTMgNC41NzktMS4yMTcuMzY3LS4wOTguNzM1LS4xOTMgMS4xMDMtLjI4OWEuMzk5LjM5OSAwIDAxLS4xLjJjLTEuMjU5IDEuNDgtMi41MTYgMi45NjItMy43NzkgNC40MzgtLjExLjEzLS4xMi4yMi0uMDQuMzcuOTM3IDEuODAzIDEuNzY4IDMuMzA5IDIuNDk4IDQuNzZsLTMuNjk2LTEuMDE5Yy0uNTM4LS4xOC0xLjA3Ny0uMzU4LTEuNjE1LS41MzktLjE2My0uMDU1LS4yNS0uMDMtLjM2LjEtMS4yNDggMS40ODgtMi41MDQgMi45Ny0zLjc1OSA0LjQ1NGEuMzk4LjM5OCAwIDAxLS4xOC4xMzJjLjAzNS0uMzc4LjA2OC0uNzU3LjEwNC0xLjEzNi4xNDktMS41NzIuMjk3LTMuMTQ0LjQ1MS00LjcxNi0uMDMtLjMxOC4xMTctLjQwNS0uMzIyLS41NDUtMS40OTMtLjU5My0zLjM0Ni0xLjMyMS00LjgxNi0xLjkwNWEuNTk1LjU5NSAwIDAxLjI0LS4xMzRjMS43OTctLjU3IDMuNTk1LTEuMTQgNS4zOTQtMS43MDUuMTI3LS4wNC4xOTktLjA5Mi4yMTEtLjIzMy4wMTMtLjE0OC4wNS0uMjk0LjA3Ni0uNDQxLjI0MS0xLjM2My40ODMtMi43MjYuNzI2LTQuMDg4LjA2OC0uMzg2LjE0LS43NzEuMjEtMS4xNTd6Ii8+PC9nPjwvc3ZnPg==" alt="Apache Spark"></div>
+                    <div>
+                        <h3 class="card-title">Spark en Fargate Spot</h3>
+                        <span class="card-subtitle">Procesamiento Distribuido</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RN-01: ADR, RevPAR</span>
+                        <span class="badge badge-req">RN-10: Reputación</span>
+                        <span class="badge badge-req">RN-11: Seudonimización</span>
+                        <span class="badge badge-topic">Temas 13, 14, 15, 16</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Apache Spark es un motor de procesamiento distribuido que divide grandes volúmenes de datos en particiones y los procesa en paralelo, en memoria. <strong>Spot</strong> es capacidad sobrante de AWS vendida con gran descuento, a cambio de que AWS pueda reclamarla con 2 minutos de aviso; por eso encaja con trabajos batch tolerantes a interrupciones.</p></div>
+                    <p><strong>Rol clave:</strong> Es la <strong>refinería de datos</strong>. Job 1 (Bronze->Silver: limpieza), Job 2 (Silver->Gold: ADR, RevPAR, pickup, reputación), Job 3 (Precios dinámicos -> RDS).</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Alta</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Glue):</strong> Fargate Spot ahorra ~70% frente a On-Demand. Control total sobre versiones de librerías.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $5.57/mes (On-Demand real: $17.47/mes — la AWS Pricing Calculator no modela tarifas Spot para Fargate directamente, así que se calculó On-Demand y se aplicó el 70% de descuento típico de Spot manualmente)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es una fábrica con miles de trabajadores temporales (Spot) procesando materia prima en productos terminados.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUxhbWJkYV80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZWQ3MTAwIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIyLjY4IDUyaC05LjEwNmwxMC4yNjQtMjEuNTkgNC41NjIgOS40NTF6bTIuMDQ3LTI0LjMzM2EuOTkuOTkgMCAwIDAtLjg5Ni0uNTY0aC0uMDAzYS45OS45OSAwIDAgMC0uODk2LjU2OUwxMS4wOTcgNTIuNTY5Yy0uMTQ3LjMxLS4xMjYuNjc0LjA1Ny45NjUuMTgxLjI5LjUuNDY2Ljg0Mi40NjZIMjMuMzFhMSAxIDAgMCAwIC45LS41NzJsNi4xOTQtMTMuMTQ0YTEgMSAwIDAgMC0uMDA1LS44NjR6TTUxLjAwOCA1MmgtOS4wMjJMMjYuOTU1IDE5LjU3OGExIDEgMCAwIDAtLjkwMy0uNTc4aC01LjkyNGwuMDA3LTdoMTEuNjhsMTQuOTYgMzIuNDJjLjE2My4zNTQuNTE2LjU4LjkwNC41OGgzLjMzem0uOTk2LTloLTMuNjlsLTE0Ljk2LTMyLjQyYTEgMSAwIDAgMC0uOTAzLS41OEgxOS4xNGExIDEgMCAwIDAtLjk5Ni45OTlsLS4wMDggOUEuOTkzLjk5MyAwIDAgMCAxOS4xMzEgMjFoNi4yODZsMTUuMDMgMzIuNDIyYTEgMSAwIDAgMCAuOTAzLjU3OGgxMC42NTRjLjU1IDAgLjk5Ni0uNDQ4Ljk5Ni0xdi05YzAtLjU1Mi0uNDQ1LTEtLjk5Ni0xIi8+PC9nPjwvc3ZnPg==" alt="AWS Lambda"></div>
+                    <div>
+                        <h3 class="card-title">AWS Lambda</h3>
+                        <span class="card-subtitle">Extractor Serverless</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">F5, F6, F7: Extracción APIs</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Lambda es cómputo serverless orientado a eventos: subes una función y AWS la ejecuta solo cuando se invoca, escalando automáticamente. Se paga por número de invocaciones y por tiempo de ejecución (GB-segundo), con un límite de 15 minutos por ejecución.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>extractor de APIs externas</strong>. Airflow invoca funciones Lambda para llamar a las APIs de Reseñas, Eventos y Divisas, extrayendo el JSON crudo y depositándolo en S3 Bronze.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (EC2):</strong> Sin servidores, pago por ejecución, ideal para tareas intermitentes.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00 (Free Tier)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un taxi: lo llamas cuando lo necesitas, haces el viaje y lo despides.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUVDMl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZWQ3MTAwIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIyIDQxaDE5VjIzSDIyem0yMS0xOGgzdjJoLTN2MmgzdjJoLTN2MmgzdjJoLTN2M2gzdjJoLTN2MmgzdjJoLTMuMTM3Yy0uMjU1LjU4Ny0uODQgMS0xLjUxOSAxSDQxdjNoLTJ2LTNoLTJ2M2gtMnYtM2gtMnYzaC0ydi0zaC0ydjNoLTJ2LTNoLTN2M2gtMnYtM2gtLjM0NGExLjY2IDEuNjYgMCAwIDEtMS41MTktMUgxOHYtMmgydi0yaC0ydi0yaDJ2LTNoLTJ2LTJoMnYtMmgtMnYtMmgydi0yaC0ydi0yaDJ2LS4zNDRjMC0uOTEzLjc0My0xLjY1NiAxLjY1Ni0xLjY1NkgyMnYtM2gydjNoM3YtM2gydjNoMnYtM2gydjNoMnYtM2gydjNoMnYtM2gydjNoLjM0NGMuOTEzIDAgMS42NTYuNzQzIDEuNjU2IDEuNjU2ek0zMiA1MkgxMlYzMmg0di0yaC00LjE1N0ExLjg0NSAxLjg0NSAwIDAgMCAxMCAzMS44NDN2MjAuMzE0YzAgMS4wMTYuODI2IDEuODQzIDEuODQzIDEuODQzaDIwLjMxNEExLjg0NSAxLjg0NSAwIDAgMCAzNCA1Mi4xNTdWNDhoLTJ6bTIyLTQwLjE1N3YyMC4zMTRBMS44NDUgMS44NDUgMCAwIDEgNTIuMTU3IDM0SDQ4di0yaDRWMTJIMzJ2NGgtMnYtNC4xNTdjMC0xLjAxNi44MjYtMS44NDMgMS44NDMtMS44NDNoMjAuMzE0YzEuMDE3IDAgMS44NDMuODI3IDEuODQzIDEuODQzIi8+PC9nPjwvc3ZnPg==" alt="Amazon EC2"></div>
+                    <div>
+                        <h3 class="card-title">Shared Backend (EC2 + EBS)</h3>
+                        <span class="card-subtitle">Host Compartido</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking + EC2</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>EC2 (Elastic Compute Cloud) ofrece máquinas virtuales donde tú controlas el sistema operativo y el software instalado. EBS (Elastic Block Store) es el disco persistente conectado a esa máquina; <strong>gp3</strong> es el tipo SSD de propósito general. Un único punto de falla (SPOF) es un componente cuya caída detiene todo lo que depende de él.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>hogar de Airflow y RabbitMQ</strong>. Una sola instancia t3.large (100 GB EBS gp3) aloja el scheduler de Airflow y el broker RabbitMQ a la vez. Este es el único lugar donde se factura el costo de ambos — las tarjetas de RabbitMQ y Airflow lo referencian, no lo duplican.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (MWAA $357.70 + Amazon MQ $210.24):</strong> Ahorra cerca de $499/mes frente a los dos servicios gestionados por separado. La contrapartida es un <strong>único punto de falla</strong> para dos funciones críticas a la vez (RNF-05: ningún evento perdido; RNF-03: precios antes de las 06:00) — si este EC2 cae, ambas garantías se pierden simultáneamente. Es un riesgo aceptado conscientemente por costo, no un descuido, y debe quedar documentado como tal en el ADR correspondiente.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $68.74/mes (único cargo real: EC2 t3.large + EBS 100GB)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el edificio de oficinas donde trabajan el director de orquesta y la oficina de correos — si el edificio se incendia, ambos dejan de operar a la vez.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUZhcmdhdGVfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2VkNzEwMCIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi40NjcgNDYuMzgydi0zLjc2NGwxLjk5NC0xdjMuNzY0em0tMy45ODctNC43NjQgMS45OTQgMXYzLjc2NGwtMS45OTQtMXptLTQuOTgzIDkuNzY0di0zLjc2NGwxLjk5My0xdjMuNzY0em0tMy45ODctNC43NjQgMS45OTMgMXYzLjc2NGwtMS45OTMtMXptLTQuOTg0LS4yMzZ2LTMuNzY0bDEuOTk0LTF2My43NjR6bS0zLjk4Ny00Ljc2NCAxLjk5NCAxdjMuNzY0bC0xLjk5NC0xem0yLjk5LTIuNSAxLjc1OS44ODItMS43NTguODgyTDIxLjc3IDQwem04Ljk3MSA1IDEuNzU4Ljg4Mi0xLjc1OC44ODJMMzAuNzQyIDQ1em04Ljk3LTVMNDMuMjMgNDBsLTEuNzU5Ljg4MkwzOS43MTIgNDB6bTQuNDMzLS4wMTItMy45ODctMmEuOTkuOTkgMCAwIDAtLjg5MSAwbC0zLjk4NyAyYTEgMSAwIDAgMC0uNTUxLjg5NHYzLjg4MmwtMy41NDEtMS43NzZhLjk5Ljk5IDAgMCAwLS44OTIgMGwtMy41NCAxLjc3NlY0MGExIDEgMCAwIDAtLjU1Mi0uODk0bC0zLjk4Ny0yYS45OS45OSAwIDAgMC0uODkgMGwtMy45ODggMmExIDEgMCAwIDAtLjU1Ljg5NHY2YzAgLjM3OS4yMTIuNzI1LjU1Ljg5NWwzLjk4NyAyYTEgMSAwIDAgMCAuODkxIDBsMy41NDEtMS43NzdWNTFjMCAuMzc5LjIxNC43MjUuNTUyLjg5NWwzLjk4NiAyYTEgMSAwIDAgMCAuODkyIDBsMy45ODYtMmMuMzM4LS4xNy41NTItLjUxNi41NTItLjg5NXYtMy44ODJsMy41NCAxLjc3N2ExIDEgMCAwIDAgLjg5MiAwbDMuOTg3LTJjLjMzOC0uMTcuNTUtLjUxNi41NS0uODk1di02YTEgMSAwIDAgMC0uNTUtLjg5NE01NCAyOC4wOWMwIDUuMTAzLTExLjA3NyA3Ljg1Ni0yMS41IDcuODU2UzExIDMzLjE5MyAxMSAyOC4wOWMwLTIuNDYxIDIuNjgtNC42MTYgNy41NDctNi4wNjdsLjU2OCAxLjkxN2MtMy43NzYgMS4xMjYtNi4xMjIgMi43MTYtNi4xMjIgNC4xNSAwIDIuNzY0IDguMzQzIDUuODU2IDE5LjUwNyA1Ljg1NnMxOS41MDctMy4wOTIgMTkuNTA3LTUuODU2YzAtMS40MzQtMi4zNDYtMy4wMjQtNi4xMjItNC4xNWwuNTY4LTEuOTE3QzUxLjMyIDIzLjQ3NCA1NCAyNS42MjkgNTQgMjguMDlNMzIuNSAxMi4wNjQgNDAuNTQ3IDE1IDMyLjUgMTcuOTM2IDI0LjQ1MyAxNXptOC44NjggMTYuNTg0Yy0xLjU1Ni43LTQuMTU1IDEuNTE2LTcuODcxIDEuNjQ1VjE5LjcwMWw4Ljk3LTMuMjczdjEwLjQ4NWMwIC43NTQtLjQzMSAxLjQzNS0xLjEgMS43MzVtLTE4LjgzNS0xLjczNVYxNi40MjhsOC45NyAzLjI3M3YxMC41OTJjLTMuNzE2LS4xMjktNi4zMTUtLjk0NS03Ljg3LTEuNjQ1LS42NjktLjMtMS4xLS45ODEtMS4xLTEuNzM1bS4yODMgMy41NmMxLjg3Ljg0MiA1LjA3IDEuODQ2IDkuNjg0IDEuODQ2IDQuNjE1IDAgNy44MTMtMS4wMDQgOS42ODQtMS44NDYgMS4zODMtLjYyMiAyLjI3Ny0yLjAxOSAyLjI3Ny0zLjU2VjE1YTEgMSAwIDAgMC0uNjU2LS45NGwtMTAuOTY0LTRhMSAxIDAgMCAwLS42ODIgMGwtMTAuOTY0IDRhMSAxIDAgMCAwLS42NTYuOTR2MTEuOTEzYzAgMS41NDEuODk0IDIuOTM4IDIuMjc3IDMuNTYiLz48L2c+PC9zdmc+" alt="AWS Fargate"></div>
+                    <div>
+                        <h3 class="card-title">Seed and Simulators</h3>
+                        <span class="card-subtitle">ECS Fargate</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">CT-06: Seed reproducible</span>
+                        <span class="badge badge-req">RNF-06: Datos seudonimizados</span>
+                        <span class="badge badge-topic">Tema 3, 4: Docker</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un seed es un script que puebla una base de datos con datos iniciales de forma reproducible (misma semilla, mismos datos). Los simuladores generan eventos sintéticos que imitan el comportamiento real (reservas, cancelaciones, eventos desordenados) para probar el sistema sin usar datos personales reales.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>generador de datos sintéticos</strong>. Puebla el sistema con datos de prueba versionados (F2, F3, F4, F5) inyectando defectos de calidad configurables.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Datos reales):</strong> Evita exponer datos sensibles y permite probar escenarios extremos (out-of-order events).</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $19.50/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Son actores que simulan ser clientes para que el restaurante practique antes de la apertura.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CAPA 4: DATA LAKE AND CATALOG -->
+    <section class="layer-section layer-4">
+        <h2 class="layer-title"><i class="fa-solid fa-layer-group"></i> Capa 4: Data Lake and Catalog</h2>
+        <div class="glossary-grid">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVNpbXBsZS1TdG9yYWdlLVNlcnZpY2VfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iIzdhYTExNiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im00Ny43NTkgMzMuOTQ4LjIzNC0xLjgxN2MyLjE3MyAxLjI1NCAyLjg0OSAxLjk5IDMuMDQ0IDIuMjkzLS4zMjQuMDYxLTEuMjA1LjA4NS0zLjI3OC0uNDc2TTMwLjQ5OSAyMWMtMTAuMzc0IDAtMTcuMTE3LTIuNTEyLTE3LjUtNC4zMDR2LS4xODVjLjM1LTEuMTE5IDYuMTQtNC41MSAxNy41LTQuNTEgMTEuMzQgMCAxNy4xMzMgMy4zOCAxNy41IDQuNTA0di4xMTFDNDcuNzI1IDE4LjQ0NiA0MC45NjIgMjEgMzAuNSAyMW0xNS4zMTkgMTIuMzYyYy00Ljc2NS0xLjU2NS0xMC45MDYtNC4zODMtMTMuMjI0LTUuNDc0YTIuMDkgMi4wOSAwIDAgMC0yLjA4Mi0xLjk4MkEyLjA5NyAyLjA5NyAwIDAgMCAyOC40MTggMjhjMCAxLjE1NC45NCAyLjA5NCAyLjA5NCAyLjA5NC40NTcgMCAuODc3LS4xNTIgMS4yMi0uNCAyLjQgMS4xMjggOC44ODcgNC4xMDQgMTMuODI2IDUuNjg2bC0xLjcyMSAxMy4zNDRDNDMuNTgzIDUwLjM1MiAzOC45MTkgNTIgMzAuNDk3IDUyYy04LjQyNSAwLTEzLjA5Mi0xLjY0OC0xMy4zNDItMy4yNDlsLTMuNzItMjguOTM3QzE2Ljk0NSAyMS45MTUgMjMuNzQ5IDIzIDMwLjUgMjNjNi43NSAwIDEzLjU1NC0xLjA4NSAxNy4wNjUtMy4xODV6TTUwIDE2LjVjMC0zLjA2OS04LjM0LTYuNS0xOS41LTYuNVMxMSAxMy40MzEgMTEgMTYuNXYuNTQzbDQuMTc0IDMxLjk5QzE1Ljg3NCA1My41MTYgMjYuMTIzIDU0IDMwLjQ5NyA1NGM0LjM3MiAwIDE0LjYxNi0uNDg0IDE1LjMyLTQuOTkzbDEuNjg0LTEzLjA2YzEuMjc3LjMzMiAyLjMxLjUxIDMuMTE1LjUwOC45OSAwIDEuNjU3LS4yNTIgMi4wOC0uNzU4LjM1LS40MTYuNDg5LS45NC4zODktMS40NzYtLjIyOC0xLjIyLTEuNjgyLTIuNTA5LTQuNzE1LTQuMTc3bC0uMS0uMDU1TDUwIDE3LjA0NHoiLz48L2c+PC9zdmc+" alt="Amazon S3"></div>
+                    <div>
+                        <h3 class="card-title">Amazon S3 · Medallion</h3>
+                        <span class="card-subtitle">Bronze, Silver, Gold</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-req">RN-11: Sin datos personales en Silver/Gold</span>
+                        <span class="badge badge-topic">Tema 7: S3, Tema 20: Data Lake</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>S3 (Simple Storage Service) es almacenamiento de objetos: guarda archivos de cualquier tipo en buckets, con durabilidad de 11 nueves. La <strong>arquitectura Medallion</strong> organiza un Data Lake en capas de calidad creciente: Bronze (datos crudos), Silver (limpios y validados) y Gold (agregados y modelados para análisis).</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>almacén central (Data Lake)</strong>. Bronze (JSON/CSV crudo), Silver (limpio, seudonimizado, Parquet), Gold (Esquema estrella con KPIs listos para Athena).</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (HDFS):</strong> Durabilidad 11 nueves, escalabilidad infinita, sin gestión de clústeres.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $4.30/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un almacén infinito: Bronze son cajas sin abrir, Silver organizadas, Gold listas para vender.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzhDNEZGRiIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDggOCkiPjxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTM0IDQ0Yy0xLjczMSAwLTMuMjg4LTEuMTExLTQuMzg1LTIuODc1TDM0IDM4LjIwMmw0LjM4NCAyLjkyM0MzNy4yODggNDIuODg5IDM1LjczIDQ0IDM0IDQ0bS0xLTE1LjkyOXY4LjM5NGwtNC4yNjYgMi44NDVDMjguMjY3IDM4LjAyOCAyOCAzNi41NjEgMjggMzVjMC00LjA0MSAxLjgxLTYuNTEgNS02LjkyOU0zNCAyNGMuOTAxIDAgMS42NzguOTU1IDEuOTE3IDIuMjFBOSA5IDAgMCAwIDM0IDI2YTkgOSAwIDAgMC0xLjkxNy4yMUMzMi4zMjIgMjQuOTU1IDMzLjA5OSAyNCAzNCAyNG02IDExYzAgMS41NjEtLjI2NyAzLjAyOC0uNzM0IDQuMzFMMzUgMzYuNDY1di04LjM5NGMzLjE5LjQxOSA1IDIuODg4IDUgNi45MjltNi01aC0yYzAgMS45MTYtMS4xNSAyLjk3Ni0yLjA4MyAzLjUyMy0uMTgyLTEuNzQzLS42NzktMy4xNDEtMS4zOTYtNC4yM0M0MS41OTcgMjguNTE3IDQzIDI2Ljk0MiA0MyAyNGgtMmMwIDIuMjgzLTEuMTM2IDMuMzQ3LTEuODIgMy43ODVhNyA3IDAgMCAwLTEuMTgyLS44MDggNS45IDUuOSAwIDAgMC0uNjY5LTIuNzM5IDUuMyA1LjMgMCAwIDAgMS40Mi0yLjM4NkEyIDIgMCAwIDAgNDAgMjBjMC0xLjEwMi0uODk3LTItMi0ycy0yIC44OTgtMiAyYzAgLjYyNC4yOTMgMS4xNzUuNzQyIDEuNTQyYTMuMyAzLjMgMCAwIDEtLjcxMiAxLjE3NUMzNS40MzQgMjIuMjcyIDM0Ljc0NCAyMiAzNCAyMnMtMS40MzQuMjcyLTIuMDMxLjcxN2EzLjMgMy4zIDAgMCAxLS43MTEtMS4xNzVjLjQ0OS0uMzY3Ljc0Mi0uOTE4Ljc0Mi0xLjU0MiAwLTEuMTAyLS44OTctMi0yLTJzLTIgLjg5OC0yIDJjMCAuODM4LjUxOSAxLjU1NSAxLjI1MSAxLjg1MmE1LjMgNS4zIDAgMCAwIDEuNDE5IDIuMzg2IDUuOSA1LjkgMCAwIDAtLjY2OCAyLjczOSA3IDcgMCAwIDAtMS4xODguODE0QzI4LjEzMyAyNy4zNTMgMjcgMjYuMjgyIDI3IDI0aC0yYzAgMi45NDIgMS40MDIgNC41MTcgMi40NzggNS4yOTMtLjcxNiAxLjA4OS0xLjIxNCAyLjQ4Ny0xLjM5NSA0LjIzQzI1LjE1IDMyLjk3NiAyNCAzMS45MTYgMjQgMzBoLTJjMCAzLjI3NCAyLjMzMiA1LjA0NCA0LjAyNiA1LjcyOC4wNTcgMS4xNzYuMjQ1IDIuMzAyLjU1IDMuMzVDMjUuNDkgMzkuMzczIDIyIDQwLjUxNyAyMiA0M2gyYzAtLjc3OSAxLjkxOC0xLjY5NSAzLjI0My0yLjAyOWwtLjA2MS0uMjQ1QzI4LjU4OSA0My44ODMgMzEuMTE1IDQ2IDM0IDQ2czUuNDEtMi4xMTcgNi44MTgtNS4yNzRsLS4wNjEuMjQ1QzQyLjA4MiA0MS4zMDUgNDQgNDIuMjIxIDQ0IDQzaDJjMC0yLjQ4My0zLjQ5LTMuNjI3LTQuNTc2LTMuOTIyLjMwNS0xLjA0OC40OTMtMi4xNzQuNTQ5LTMuMzVDNDMuNjY3IDM1LjA0NCA0NiAzMy4yNzQgNDYgMzBNMTcgMTVoMjd2LTVIMTd6bS04IDhoNnYtNkg5em0wIDdoNnYtNUg5em0tNSAwaDNWMTBINHpNNCA4aDNWNEg0em01IDdoNnYtNUg5em0wLTdoMzVWNEg5em0zNi02SDNhMSAxIDAgMCAwLTEgMXYyOGExIDEgMCAwIDAgMSAxaDE3di0yaC0zdi01aDV2LTJoLTV2LTZoMjd2NGgyVjNhMSAxIDAgMCAwLTEtMSIvPjwvZz48L3N2Zz4=" alt="AWS Glue Crawler"></div>
+                    <div>
+                        <h3 class="card-title">AWS Glue Crawler</h3>
+                        <span class="card-subtitle">Rastreador de Esquemas</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-topic">Tema 20: Arquitectura + Power BI</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>AWS Glue es el servicio de integración de datos (ETL) serverless de AWS. Un <strong>crawler</strong> recorre una ubicación de datos (por ejemplo, un prefijo de S3), infiere el esquema y las particiones de los archivos y registra o actualiza las tablas en el Data Catalog. Se cobra por DPU-hora (Data Processing Unit) con mínimo facturable de 10 minutos por ejecución.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>bibliotecario</strong>. Escanea la capa Gold, descubre nuevas tablas y particiones, y actualiza el Glue Data Catalog para que Athena sepa qué consultar.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Scripts manuales):</strong> Automatiza la catalogación y detecta cambios de esquema.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $4.40/mes (2 DPU × 10 min × $0.44/DPU-h × 30 runs; Data Catalog dentro del Free Tier) — la AWS Pricing Calculator no permite definir 30 ejecuciones mensuales de 10 min, así que este valor se calculó manualmente</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el bibliotecario que escanea libros nuevos y actualiza el índice.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzhDNEZGRiIgZD0iTTAgMGg2NHY2NEgweiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDggOCkiPjxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTIxLjMwNiAxOC4zNzVDMjMuNjc4IDE4LjkzMiAyNi42OCAxOSAyOCAxOXM0LjMyMy0uMDY4IDYuNjk1LS42MjVMMjkgMjkuNzY0VjMzaC0ydi0zLjIzNnpNMjggMTVjMy45NSAwIDYuNTczLjU2MSA3LjYxNyAxLTEuMDQ0LjQ0MS0zLjY2NyAxLTcuNjE3IDEtMy45NDkgMC02LjU3MS0uNTU5LTcuNjE2LTEgMS4wNDUtLjQzOSAzLjY2Ny0xIDcuNjE2LTFtMyAyMHYtNC43NjRsNi42NDItMTMuMjg0Yy4yMjYtLjI3OC4zNTgtLjU5My4zNTgtLjk1MiAwLTIuNzgzLTcuNjU0LTMtMTAtM3MtMTAgLjIxNy0xMCAzYzAgLjM1OS4xMzEuNjc0LjM1OC45NTJMMjUgMzAuMjM2VjM1ek00IDJoNXYySDZ2NDBoM3YySDR6bTEyIDQwaDI0di0ySDE2em0wLTRoMjR2LTJIMTZ6bTAtMjZoMjR2LTJIMTZ6bTAtNGgyNFY2SDE2em0tMyAzNmgyOVY0SDEzem0tMiAyaDMzVjJIMTF6Ii8+PC9nPjwvc3ZnPg==" alt="AWS Glue Data Catalog"></div>
+                    <div>
+                        <h3 class="card-title">AWS Glue Data Catalog</h3>
+                        <span class="card-subtitle">Metastore Central</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-topic">Tema 20: Data Lake</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Un catálogo de datos (metastore) guarda los metadatos de las tablas: nombre, columnas, tipos, formato y ubicación en S3. No contiene los datos, solo su descripción, y permite que motores como Athena o Spark consulten archivos en S3 como si fueran tablas. Es compatible con el Hive Metastore.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>diccionario de datos</strong>. Almacena metadatos de las tablas en S3, permitiendo que Athena y Spark las lean sin mover los datos.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja-Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Hive Metastore):</strong> Serverless, integrado con Athena, sin coste adicional.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00 (Free Tier)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el índice de una biblioteca: sin él, no sabrías qué libros tienes.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUF0aGVuYV80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjOGM0ZmZmIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMwLjY5MiAyMy4xNTZjMi45NjMgMCA0Ljg0Mi41OSA1LjQyMi45OTYtLjU4LjQwNS0yLjQ1OS45OTUtNS40MjIuOTk1cy00Ljg0Mi0uNTktNS40MjItLjk5NWMuNTgtLjQwNiAyLjQ1OS0uOTk2IDUuNDIyLS45OTZtLS43MyA1LjUxMWMwLS4zNDYuMjg2LS42MjcuNjM1LS42MjcuMTAzIDAgLjE5Ni4wMy4yODIuMDcybC0uNTYyIDEuMTFhLjYyLjYyIDAgMCAxLS4zNTUtLjU1NW00LjgwNyA2LjU1N2MtLjM2NC4yNzItMS41MzMuODc0LTMuNTczLjg3NC0yLjQ1NyAwLTQuMTA5LS40OC00LjU2OC0uNzc4bC0xLjE3Ny04LjkwM2MxLjQ3NC41MSAzLjQzNC43MjEgNS4yNC43MjEgMS44MDggMCAzLjc2OC0uMjEyIDUuMjQyLS43MmwtLjQzNiAzLjNhNTEgNTEgMCAwIDEtMy42MTMtMS41NDMgMS4zOCAxLjM4IDAgMCAwLTEuMjg3LS44NzNjLS43NjMgMC0xLjM4Mi42MTMtMS4zODIgMS4zNjUgMCAuNzUzLjYyIDEuMzY0IDEuMzgyIDEuMzY0LjE0IDAgLjI3NS0uMDI3LjQwMi0uMDY2IDEuNzg3Ljg1NiAzLjE3NyAxLjQzOCA0LjIyNyAxLjh6TTIzLjEzNCAyNC4yOGwxLjUwNiAxMS40MDNjLjEzMyAyLjMzOCA1Ljg5NCAyLjQwNiA2LjU1NiAyLjQwNiAzLjE1MSAwIDUuMzgzLTEuMjE5IDUuNTQtMi4zNmwuNDU2LTMuNDUyYy4yMDIuMDI3LjM4Ni4wNDUuNTQxLjA0NS44MSAwIDEuMDM1LS4zNCAxLjIxLS42MDMuMTc0LS4yNjQuMjI2LS41ODcuMTQ1LS45MS0uMTQ3LS41OTMtLjg4Mi0xLjMxLTEuNDY0LTEuNzk4bC42MjYtNC43My0uMDA2LS4wMDJjLjAwMy0uMDQzLjAxNS0uMDgzLjAxNS0uMTI3IDAtMi4yMDQtNC4wNzYtMi45ODctNy41NjctMi45ODdzLTcuNTY3Ljc4My03LjU2NyAyLjk4N2MwIC4wNDQuMDEyLjA4NC4wMTUuMTI3em03LjMzMy03LjIwMWM2Ljk1NCAwIDEyLjYxMiA1LjU4MSAxMi42MTIgMTIuNDQzUzM3LjQyIDQxLjk2NiAzMC40NjcgNDEuOTY2cy0xMi42MTItNS41ODMtMTIuNjEyLTEyLjQ0NFMyMy41MTMgMTcuMDggMzAuNDY3IDE3LjA4TTEyLjAyNyAzMy4xMXYxLjk5MWg0Ljk1YzIuMjE3IDUuMTk3IDcuNDI4IDguODU1IDEzLjQ5IDguODU1IDguMDY2IDAgMTQuNjMtNi40NzUgMTQuNjMtMTQuNDM1cy02LjU2NC0xNC40MzQtMTQuNjMtMTQuNDM0Yy02LjUyIDAtMTIuMDU1IDQuMjMyLTEzLjkzNyAxMC4wNmgtNC41MDN2MS45OWg0LjAyN2MtLjExLjY1MS0uMTc4IDEuMzE0LS4xOTYgMS45OTFIOXYxLjk5MWg2LjkzMmMuMDc3LjY4MS4yMTMgMS4zNDIuMzgzIDEuOTkxek01Mi4zNDIgNTEuMzhjLS44Mi44MS0yLjI0MS44MTUtMy4wNi4wMDdsLTcuMzM5LTcuMjRhMTguNyAxOC43IDAgMCAwIDMuMTI1LTMuMDA5bDcuMjg0IDcuMjIxYTIuMSAyLjEgMCAwIDEgLjYzIDEuNTEgMi4xIDIuMSAwIDAgMS0uNjQgMS41MW0xLjQzOC00LjQyNy03LjUyLTcuNDU3YzEuODc2LTIuODgzIDIuOTc5LTYuMyAyLjk3OS05Ljk3M0M0OS4yMzkgMTkuMzEgNDAuODE4IDExIDMwLjQ2NyAxMWMtNy4zMTIgMC0xNC4wMDkgNC4yMzgtMTcuMDY0IDEwLjc5NmwxLjgzMy44MzJjMi43MjYtNS44NTUgOC43MDUtOS42MzcgMTUuMjMtOS42MzcgOS4yNCAwIDE2Ljc1NSA3LjQxNiAxNi43NTUgMTYuNTMxcy03LjUxNSAxNi41My0xNi43NTQgMTYuNTNjLTYuMDUzIDAtMTEuNjU0LTMuMjM4LTE0LjYyLTguNDUybC0xLjc2Ljk3NWMzLjMyMiA1Ljg0IDkuNTk5IDkuNDY5IDE2LjM4IDkuNDY5IDMuNTkgMCA2LjkzNC0xLjAxNyA5Ljc4OS0yLjc0OGw3LjYgNy40OThBNC4xNyA0LjE3IDAgMCAwIDUwLjgwNSA1NGE0LjE5IDQuMTkgMCAwIDAgMi45NjEtMS4yMTJBNC4wNyA0LjA3IDAgMCAwIDU1IDQ5Ljg3MWE0LjA3IDQuMDcgMCAwIDAtMS4yMi0yLjkyIi8+PC9nPjwvc3ZnPg==" alt="Amazon Athena"></div>
+                    <div>
+                        <h3 class="card-title">Amazon Athena</h3>
+                        <span class="card-subtitle">Consultas SQL Serverless</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RF-09: Modelo Analítico</span>
+                        <span class="badge badge-topic">Tema 20: Arquitectura + Power BI</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Athena es un motor de consultas SQL serverless que lee directamente archivos en S3 (Parquet, CSV, JSON) usando los esquemas del Data Catalog. No hay clúster que administrar: se paga por cada TB escaneado, por lo que formatos columnares y particiones reducen el costo.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>motor de consultas analíticas</strong>. Lee la capa Gold desde S3 usando el Catálogo y devuelve los datos a QuickSight (o Power BI). Pagas solo por TB escaneado.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Redshift):</strong> Sin coste fijo de clúster inactivo. Para 0.2 TB/mes, cuesta $1.00.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.98/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es un buscador que lee libros en los estantes sin moverlos a una mesa.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CAPA 5: ANALYTICS AND STAGING -->
+    <section class="layer-section layer-5">
+        <h2 class="layer-title"><i class="fa-solid fa-chart-pie"></i> Capa 5: Analytics and Staging</h2>
+        <div class="glossary-grid">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGcgY2xpcC1wYXRoPSJ1cmwoI3N2Zy0zYjdjNThmNy1hM2Y1LTQzMWEtYjRhZC03YjVmYjdmZmY1NWItYSkiPjxwYXRoIGZpbGw9IiNkZDM0NGMiIGQ9Ik0wIDBoNjR2NjRIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJtNDguOTk4IDE5Ljg5LTE0Ljk5Ny04LjY1NmE0LjAyIDQuMDIgMCAwIDAtNC4wMDIgMEwxNS4wMDIgMTkuODlBNC4wMSA0LjAxIDAgMCAwIDEzIDIzLjM1N3YxNy4zMWMwIDEuNDI1Ljc2OCAyLjc1MyAyLjAwMiAzLjQ2NmwxNC45OTcgOC42NTZhNC4wMDYgNC4wMDYgMCAwIDAgNC4wMDIgMGwxNC45OTctOC42NTZBNC4wMiA0LjAyIDAgMCAwIDUxIDQwLjY2N3YtMTcuMzFhNC4wMSA0LjAxIDAgMCAwLTIuMDAyLTMuNDY3bS0zMi45OTYgMS43MzIgMTQuOTk3LTguNjU2YTIgMiAwIDAgMSAyLjAwMiAwbDE0Ljk5NyA4LjY1NkEyLjAxIDIuMDEgMCAwIDEgNDkgMjMuMzU3djIuOTlsLTE2LjAzMSA5di04LjM4YTEgMSAwIDAgMC0xLjQ5LS44NzFMMTUgMzUuMzQ3di0xMS45OWMwLS43MTQuMzg0LTEuMzc4IDEuMDAyLTEuNzM1bTMxLjk5NiAyMC43NzktMTQuOTk3IDguNjU2YTIuMDEgMi4wMSAwIDAgMS0yLjAwMiAwTDE2LjAwMiA0Mi40QTIuMDEgMi4wMSAwIDAgMSAxNSA0MC42NjZ2LTMuMDI1bDE1Ljk2OS04Ljk2NXY4LjM4YTEgMSAwIDAgMCAxLjQ4OS44NzFMNDkgMjguNjQxdjEyLjAyNmMwIC43MTMtLjM4NCAxLjM3Ny0xLjAwMiAxLjczNCIvPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9InN2Zy0zYjdjNThmNy1hM2Y1LTQzMWEtYjRhZC03YjVmYjdmZmY1NWItYSI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTAgMGg2NHY2NEgweiIvPjwvY2xpcFBhdGg+PC9kZWZzPjwvc3ZnPg==" alt="Amazon QuickSight"></div>
+                    <div>
+                        <h3 class="card-title">Amazon QuickSight</h3>
+                        <span class="card-subtitle">Business Intelligence</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">CT-10: Responde preguntas de negocio</span>
+                        <span class="badge badge-topic">Tema 20: Power BI / Visualización</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>QuickSight es la herramienta de Business Intelligence (BI) de AWS para construir dashboards e informes interactivos. <strong>SPICE</strong> es su motor en memoria que guarda una copia de los datos para que los dashboards respondan rápido sin consultar la fuente cada vez. Se licencia por usuario: autores (crean) y lectores (consultan).</p></div>
+                    <p><strong>Rol clave:</strong> Es la <strong>capa de visualización</strong>. Consume Athena y presenta dashboards de ocupación, ADR, RevPAR, pickup y reputación para gerentes y revenue managers.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Power BI):</strong> Lee Athena directamente sin Data Gateway. Más barato ($36 vs $70/mes con Power BI Pro, 5 usuarios). Se integra nativamente en la VPC.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $36.00/mes (10 GB SPICE, 1 Autor + 4 Lectores)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el tablero del auto: muestra velocidad, gasolina y temperatura de forma visual.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLVZpcnR1YWwtUHJpdmF0ZS1DbG91ZF80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjOGM0ZmZmIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0ibTQ4IDMzLjk3Ny0zLjUwMS0xLjQ2OXYxNC4zN2MzLjQwNy0uNzMgMy40OTktNC42OTcgMy41MDEtNC44ODN6bS01LjUwMSAxMi45NDZWMzIuNTA4TDM5IDMzLjk3OHY4LjAyNmMuMDA4LjQ2Mi4xODMgNC4zMzUgMy40OTkgNC45Mm0uNjEzLTE2Ljg0YTEgMSAwIDAgMSAuNzc0LS4wMDJsNS41MDEgMi4zMWExIDEgMCAwIDEgLjYxMy45MjF2OC42OTJjLS4wMjIgMi40MjctMS40MzggNy02LjYzIDctNC45NzcgMC02LjM0NC00LjU3Mi02LjM3LTYuOTg5di04LjcwM2MwLS40MDMuMjQxLS43NjYuNjEzLS45MjJ6bTguODg4LjcxLTguNTA4LTMuN0wzNSAzMC42Njd2MTAuMzU3Yy0uMDAxLjA2NS0uMDM3IDQuOTg0IDIuODA3IDcuODcgMS4zOCAxLjQgMy4yNTIgMi4xMSA1LjU2MyAyLjExIDguNDM4IDAgOC42MjYtOS41OCA4LjYzLTkuOTg3em0yLS42NTd2MTAuODljLS4wMjcgNC4xNDctMi4yODQgMTEuOTc4LTEwLjYzIDExLjk3OC0yLjg3MiAwLTUuMjI1LS45MTQtNi45OTctMi43MTYtMy40MzItMy40OS0zLjM3Ny05LjA0NS0zLjM3My05LjI4VjMwLjAwNGExIDEgMCAwIDEgLjYxMi0uOTIybDkuNDk5LTRhMSAxIDAgMCAxIC43ODYuMDA1bDkuNTAxIDQuMTMyYTEgMSAwIDAgMSAuNjAyLjkxN20tMzUgNy44NjhoMTF2MkgxOWMtNC43ODQgMC04LjcyOS0zLjUyLTguOTgtOC4wMTZhNiA2IDAgMCAxLS4wMi0uNjAzYzAtNS4yOTkgMy42NTQtNy4zNDcgNS45MTktOC4xMDdhOCA4IDAgMCAxLS4wMjgtLjY1MmMwLTQuNTg3IDIuNzY3LTguOTI1IDYuNzMtMTAuNTQ3IDQuOTU5LTIuMDMgMTAuNjE0LTEuMTQyIDE0LjA3NCAyLjIwNiAxLjAyMy45OTcgMS45MDkgMi4zMTEgMi42NDggMy45MjEuOTU2LS43ODQgMi4wNDktMS4yMDIgMy4xOC0xLjIwMiAyLjcxMSAwIDUuNzU4IDIuMjkyIDYuMzc3IDYuMDU4IDIuMTY5LjI4MiA0LjAzNiAxLjU3NyA0Ljk5NiAzLjUybC0xLjc5Mi44ODdjLS43NjQtMS41NDQtMi4yOTgtMi40NjUtNC4xMDQtMi40NjVhMSAxIDAgMCAxLS45OTgtLjk0Yy0uMTk1LTMuMzAyLTIuNzI3LTUuMDYtNC40NzktNS4wNi0uOTczIDAtMS45NDEuNTctMi43MjYgMS42MDRhLjk5OS45OTkgMCAwIDEtMS43MzUtLjI2Yy0uNzM1LTIuMDAyLTEuNjY0LTMuNTU5LTIuNzYtNC42MjgtMi44OTYtMi44MDMtNy42ODctMy41MjQtMTEuOTIzLTEuNzktMy42MDQgMS40NzUtNS40ODggNS40OTEtNS40ODggOC42OTYgMCAuNC4wNTYuODc3LjEwMiAxLjI2YTEgMSAwIDAgMS0uNzUzIDEuMDljLTEuOTU3LjQ4My01LjI0IDEuOTYxLTUuMjQgNi40MSAwIC4xNS0uMDAyLjMuMDEzLjQ1LjE5NiAzLjQ3NiAzLjI2MyA2LjE2OCA2Ljk4NyA2LjE2OCIvPjwvZz48L3N2Zz4=" alt="Amazon VPC"></div>
+                    <div>
+                        <h3 class="card-title">Staging VPC</h3>
+                        <span class="card-subtitle">Entorno de Pruebas</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-topic">Tema 6: AWS Networking</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Staging es un entorno previo a producción que la replica a menor escala para validar nuevas versiones con condiciones similares a las reales. Aislarlo en su propia VPC evita que pruebas o errores afecten a los usuarios y datos de producción.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>campo de pruebas</strong>. Copia reducida de producción (ECS + RDS) para probar nuevas versiones sin afectar a huéspedes reales. Corre solo en horario laboral.</p>
+                    <p><span class="badge badge-importance">Importancia: Media</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas:</strong> Evita caídas del sistema real y permite experimentar con seguridad.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: ~$40/mes estimado (220 h/mes en horario laboral) — <strong>aún no verificado en la AWS Pricing Calculator</strong>, pendiente de confirmar junto al resto de la estimación de producción</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el simulador de vuelo para pilotos: practicas sin riesgo real.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CAPA 6: SECURITY AND OBSERVABILITY -->
+    <section class="layer-section layer-6">
+        <h2 class="layer-title"><i class="fa-solid fa-shield-halved"></i> Capa 6: Security and Observability</h2>
+        <div class="glossary-grid">
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUlkZW50aXR5LWFuZC1BY2Nlc3MtTWFuYWdlbWVudF80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZGQzNDRjIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDQ3aDQwVjE4SDEyem00Mi0zMHYzMWExIDEgMCAwIDEtMSAxSDExYTEgMSAwIDAgMS0xLTFWMTdhMSAxIDAgMCAxIDEtMWg0MmExIDEgMCAwIDEgMSAxTTM1IDM5aDEydi0ySDM1em0xMC00aDR2LTJoLTR6bS0xMCAwaDZ2LTJoLTZ6bS0xMi41IDIuNWEuNS41IDAgMSAwIDEuMDAyLS4wMDIuNS41IDAgMCAwLTEuMDAyLjAwMm0zIDBhMi41IDIuNSAwIDAgMS0xLjUgMi4yODhWNDJoLTJ2LTIuMjEyYTIuNSAyLjUgMCAwIDEtMS41LTIuMjg4YzAtMS4zNzggMS4xMjEtMi41IDIuNS0yLjVzMi41IDEuMTIyIDIuNSAyLjVNMTYgNDIuOTk1IDI5Ljk5NSA0M2wuMDAxLTJIMjd2LTJoMi45OTdsLjAwMS0ySDI3di0yaDIuOTk5TDMwIDMzLjAwNSAxNi4wMDUgMzN6bTItMTEuOTk0IDEwLjAwMS4wMDMuMDAxLTUuMDA0YzAtMS4wMjQtLjgwMi0xLjcyNy0xLjI4LTIuMDU1LS44NzUtLjYtMi41NDgtLjk0NS0zLjcyLS45NDVIMjNjLTIuMTI3IDAtNC45OTcgMS4yMzItNC45OTggM3ptLTMuNzA3IDEzLjdhMSAxIDAgMCAxLS4yOTMtLjcwN0wxNC4wMDUgMzJhMSAxIDAgMCAxIDEtMUgxNmwuMDAyLTVjLjAwMS0zLjA4OSAzLjg3NC01IDYuOTk4LTVoLjAwMmMxLjU2NSAwIDMuNjUxLjQ3MyA0Ljg1MiAxLjI5NSAxLjM4NS45NTEgMi4xNDkgMi4yNjcgMi4xNDggMy43MDVsLS4wMDEgNS4wMDUuOTk5LjAwMWExIDEgMCAwIDEgMSAxTDMxLjk5NSA0NGExIDEgMCAwIDEtMSAxTDE1IDQ0Ljk5NGExIDEgMCAwIDEtLjcwNy0uMjkzTTQ3IDMwaDJ2LTJoLTJ6bS0xMiAwaDl2LTJoLTl6Ii8+PC9nPjwvc3ZnPg==" alt="AWS IAM"></div>
+                    <div>
+                        <h3 class="card-title">AWS IAM</h3>
+                        <span class="card-subtitle">Identity and Access Management</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Seguridad</span>
+                        <span class="badge badge-req">CT-02: Sin credenciales en repo</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos (IAM)</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>IAM (Identity and Access Management) controla quién puede hacer qué sobre qué recursos en AWS, mediante usuarios, roles y políticas JSON. El <strong>principio de privilegio mínimo</strong> consiste en dar a cada identidad solo los permisos estrictamente necesarios para su tarea.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>guardia de seguridad</strong>. Define roles de privilegio mínimo: Lambda solo escribe en S3 Bronze, Spark lee S3 y escribe en RDS, etc. Evita accesos no autorizados.</p>
+                    <p><span class="badge badge-importance">Importancia: Crítica</span> <span class="badge badge-complexity">Complejidad: Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Okta):</strong> Gratuito, nativo, sin mantenimiento. Esencial para la auditoría (CA-10).</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el sistema de tarjetas de acceso: cada empleado solo entra a su oficina.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUtleS1NYW5hZ2VtZW50LVNlcnZpY2VfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2RkMzQ0YyIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi44NCA0MS45OTdoNnYtMmgtNnptLTggMGg2di0yaC02em0tOCAwaDZ2LTJoLTZ6bTEwLTYuNWExLjUwMSAxLjUwMSAwIDEgMSAxLjUgMS41Yy0uODI2IDAtMS41LS42NzMtMS41LTEuNW01IDBjMC0xLjkzLTEuNTctMy41LTMuNS0zLjUtMS45MjggMC0zLjUgMS41Ny0zLjUgMy41czEuNTcyIDMuNSAzLjUgMy41YzEuOTMgMCAzLjUtMS41NyAzLjUtMy41bS0xMS41IDEuNWMtLjgyNiAwLTEuNS0uNjczLTEuNS0xLjVzLjY3NC0xLjUgMS41LTEuNWExLjUwMSAxLjUwMSAwIDAgMSAwIDNtMC01Yy0xLjkyOCAwLTMuNSAxLjU3LTMuNSAzLjVzMS41NzIgMy41IDMuNSAzLjVjMS45MyAwIDMuNS0xLjU3IDMuNS0zLjVzLTEuNTctMy41LTMuNS0zLjVtMjMuNS02djIwYTEgMSAwIDAgMS0xIDFoLTI2di0yaDI1di0xOGgtMTl2LTJoMjBhMSAxIDAgMCAxIDEgMW0tMzIuOTM2LTIuMTA1YTEuOTggMS45OCAwIDAgMS0xLjk4LTEuOThjMC0xLjA5Ljg4OS0xLjk3OCAxLjk4LTEuOTc4YTEuOTggMS45OCAwIDAgMSAxLjk3OCAxLjk3OSAxLjk4IDEuOTggMCAwIDEtMS45NzggMS45NzltMC01Ljk1OGEzLjk4NCAzLjk4NCAwIDAgMC0zLjk4IDMuOTc5IDMuOTg0IDMuOTg0IDAgMCAwIDMuOTggMy45NzkgMy45ODMgMy45ODMgMCAwIDAgMy45NzgtMy45OCAzLjk4MyAzLjk4MyAwIDAgMC0zLjk3OC0zLjk3OG0yLjYzIDEyLjExMmExIDEgMCAwIDAtLjY5My45NXYxOC41OGwtMS45NCAxLjktMi4wNi0yLjgwN3YtMi42M2ExIDEgMCAwIDAtLjM1MS0uNzYxbC0yLjEwNi0xLjc5MiAyLjEwNi0xLjc5MWMuMjIzLS4xOS4zNS0uNDcuMzUtLjc2MlYzOS4yM2MwLS4yOTMtLjEyNy0uNTcyLS4zNS0uNzYybC0yLjEwNi0xLjc5MSAyLjEwNi0xLjc5MmMuMjIzLS4xOS4zNS0uNDcuMzUtLjc2MnYtMy4xMjdhMSAxIDAgMCAwLS42OTctLjk1M2MtNC4zOC0xLjM4OC02Ljg4Ni01LjY1My01Ljk1OC0xMC4xNDIuNjctMy4yNDYgMy4xNjYtNS44NDggNi4zNTktNi42MzEgMi43MTgtLjY2OCA1LjUwOS0uMDg1IDcuNjUyIDEuNTk2YTguNzQgOC43NCAwIDAgMSAzLjM2OSA2LjkxNyA4LjY3IDguNjcgMCAwIDEtNi4wMzEgOC4yNjJtOC4wMy04LjI2MmExMC43MyAxMC43MyAwIDAgMC00LjEzNC04LjQ5MWMtMi42MjgtMi4wNjItNi4wNC0yLjc4LTkuMzYzLTEuOTY0LTMuOTM3Ljk2NS03LjAxNSA0LjE3LTcuODQxIDguMTY4YTEwLjc1IDEwLjc1IDAgMCAwIDYuNjE1IDEyLjIwNnYxLjk2bC0yLjY0OCAyLjI1M2ExLjAwMiAxLjAwMiAwIDAgMCAwIDEuNTIzbDIuNjQ4IDIuMjU0di43NzhsLTIuNjQ4IDIuMjU0YTEgMSAwIDAgMCAwIDEuNTIzTDE2Ljg0IDQ2LjV2Mi40OTZjMCAuMjEzLjA2OS40Mi4xOTUuNTkybDIuOTM2IDRhMSAxIDAgMCAwIC44MDYuNDA4IDEgMSAwIDAgMCAuNjk5LS4yODZsMy4wNjQtM2ExIDEgMCAwIDAgLjMtLjcxNHYtMTguM2ExMC42NiAxMC42NiAwIDAgMCA2LjcyNC05LjkxMyIvPjwvZz48L3N2Zz4=" alt="AWS KMS"></div>
+                    <div>
+                        <h3 class="card-title">AWS KMS</h3>
+                        <span class="card-subtitle">Key Management Service</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Datos cifrados</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>KMS (Key Management Service) crea y custodia claves criptográficas que otros servicios usan para cifrar datos en reposo. Usa cifrado de sobre (<em>envelope encryption</em>): los datos se cifran con una clave de datos, y esa clave se cifra a su vez con la clave maestra que nunca sale de KMS.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>cerrajero</strong>. Cifra datos en reposo en S3, RDS y Secrets Manager. Garantiza que si alguien roba un disco físico, no pueda leer los datos.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Cifrado manual):</strong> Rotación automática de claves, integración con CloudTrail.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $2.00/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja fuerte donde se guardan las llaves de la empresa.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLVNlY3JldHMtTWFuYWdlcl80ODwvdGl0bGU+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjZGQzNDRjIiBkPSJNMCAwaDY0djY0SDB6Ii8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTMxLjI0IDM0LjY0YS43Ni43NiAwIDAgMCAxLjUyIDAgLjc2Ljc2IDAgMCAwLTEuNTIgMG0tMiAwQTIuNzYzIDIuNzYzIDAgMCAxIDMyIDMxLjg4YTIuNzY0IDIuNzY0IDAgMCAxIDIuNzYgMi43NkEyLjc2IDIuNzYgMCAwIDEgMzMgMzcuMjA1VjQwaC0ydi0yLjc5NWEyLjc2IDIuNzYgMCAwIDEtMS43Ni0yLjU2NU0zOSAzMUgyNXYxMGgxNHYtMmgtMnYtMmgydi0yaC0ydi0yaDJ6bS0xMi0yaDkuOTk5TDM3IDI1YzAtLjg2NS0uNTc2LTEuODU5LTEuNTQzLTIuNjU5LTEuMDE0LS44NC0yLjMwNS0xLjM0MS0zLjQ1NC0xLjM0MWgtLjAwMmMtMi4zODMgMC01IDIuMDkzLTUuMDAxIDR6bTEyLTQtLjAwMSA0SDQwYTEgMSAwIDAgMSAxIDF2MTJhMSAxIDAgMCAxLTEgMUgyNGExIDEgMCAwIDEtMS0xVjMwYTEgMSAwIDAgMSAxLTFoMXYtNGMuMDAxLTMuMDI5IDMuNDY5LTYgNy4wMDEtNmguMDAyYzEuNjI1IDAgMy4zNDguNjU3IDQuNzI5IDEuODAxQzM4LjE3NCAyMS45OTQgMzkuMDAxIDIzLjUyNSAzOSAyNU0xNS40ODkgNDMuOTVsMS42MjEtMS4xNzNBMTguMiAxOC4yIDAgMCAxIDEzLjY3NiAzM0gxNnYtMmgtMi4zMjJhMTguMiAxOC4yIDAgMCAxIDMuNDMyLTkuNzE5bC0xLjYyMS0xLjE3M0EyMC4xOCAyMC4xOCAwIDAgMCAxMS42NzggMzFIMTB2MmgxLjY3NmMuMTg1IDMuOTYyIDEuNDg0IDcuNzMxIDMuODEzIDEwLjk1bTI3LjI1OCAyLjk2OEExOC4yIDE4LjIgMCAwIDEgMzMgNTAuMzVWNDhoLTJ2Mi4zNWExOC4yIDE4LjIgMCAwIDEtOS43NS0zLjQzMmwtMS4xNzIgMS42MkEyMC4xNyAyMC4xNyAwIDAgMCAzMSA1Mi4zNVY1NGgydi0xLjY1YzMuOTUxLS4xOSA3LjcwOS0xLjQ4OCAxMC45MTktMy44MTJ6TTIxLjI1IDE3LjE0QTE4LjIgMTguMiAwIDAgMSAzMSAxMy43MDdWMTZoMnYtMi4yOTNhMTguMiAxOC4yIDAgMCAxIDkuNzQ3IDMuNDMzbDEuMTcyLTEuNjJBMjAuMTYgMjAuMTYgMCAwIDAgMzMgMTEuNzA3VjEwaC0ydjEuNzA3YTIwLjE3IDIwLjE3IDAgMCAwLTEwLjkyMiAzLjgxM3pNNTIuMzE5IDMxYTIwLjE3IDIwLjE3IDAgMCAwLTMuODEtMTAuODkybC0xLjYyMiAxLjE3M0ExOC4xNiAxOC4xNiAwIDAgMSA1MC4zMTkgMzFINDh2MmgyLjMyMmExOC4yIDE4LjIgMCAwIDEtMy40MzUgOS43NzdsMS42MjIgMS4xNzNjMi4zMjktMy4yMTkgMy42MjctNi45ODggMy44MTMtMTAuOTVINTR2LTJ6bS03LjI5My0xMC41ODQgNi4xNTktNi4xNi0xLjQxNC0xLjQxNC02LjE1OSA2LjE2ek0xOC45NzEgNDMuNjQybC02LjE2IDYuMTYgMS40MTQgMS40MTQgNi4xNjEtNi4xNnptNC4yNzUtMjEuODA5LTExLjY2LTExLjY2LTEuNDE0IDEuNDE0IDExLjY2IDExLjY2ek00My4zMDMgNDEuODlsMTAuNTIzIDEwLjUyMy0xLjQxNCAxLjQxNC0xMC41MjQtMTAuNTIzeiIvPjwvZz48L3N2Zz4=" alt="AWS Secrets Manager"></div>
+                    <div>
+                        <h3 class="card-title">AWS Secrets Manager</h3>
+                        <span class="card-subtitle">Gestión de Credenciales</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">CT-02: Sin secretos en repo</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>Secrets Manager almacena de forma cifrada credenciales (contraseñas de bases de datos, API keys, tokens) y las entrega a las aplicaciones en tiempo de ejecución mediante una llamada autorizada por IAM. Puede rotarlas automáticamente sin cambiar el código.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>guardián de las contraseñas</strong>. Guarda credenciales de RDS, RabbitMQ y APIs fuera del código fuente. FastAPI y Airflow las leen en tiempo de ejecución.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Variables de entorno):</strong> Rotación automática, evita fugas de secretos en Git.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $3.20/mes</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es la caja de seguridad donde se guardan las llaves, no debajo del felpudo.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQW1hem9uLUNsb3VkV2F0Y2hfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2U3MTU3YiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik00Mi4xODQgMzkuMzgxYTQuMDk1IDQuMDk1IDAgMCAwLTguMTg5IDAgNC4wOTUgNC4wOTUgMCAwIDAgOC4xODkgMG0yIDBjMCAzLjM1My0yLjczNCA2LjA4MS02LjA5NSA2LjA4MXMtNi4wOTQtMi43MjgtNi4wOTQtNi4wOGMwLTMuMzU0IDIuNzM0LTYuMDgyIDYuMDk0LTYuMDgyczYuMDk1IDIuNzI4IDYuMDk1IDYuMDgxbTYuNTU5IDEwLjIzNS00Ljg5Ny00LjRhMTAgMTAgMCAwIDEtMS4wNjEgMS4xOWw0Ljg4NiA0LjM5N2EuODA2LjgwNiAwIDAgMCAxLjEzMS0uMDU5LjguOCAwIDAgMC0uMDU5LTEuMTI4bS0xMi42NTQtMi41MjRjNC4yNjIgMCA3LjcyOS0zLjQ2IDcuNzI5LTcuNzEgMC00LjI1Mi0zLjQ2Ny03LjcxMS03LjcyOS03LjcxMS00LjI2IDAtNy43MjcgMy40NTktNy43MjcgNy43MXMzLjQ2NyA3LjcxIDcuNzI3IDcuNzFtMTMuOTkyIDEuMDQyYTIuNzk2IDIuNzk2IDAgMCAxIC4yMDcgMy45NDZjLS41NTMuNjEtMS4zMTcuOTItMi4wODMuOTJhMi44IDIuOCAwIDAgMS0xLjg3Mi0uNzEzbC01LjE2MS00LjY0NmE5LjY3IDkuNjcgMCAwIDEtNS4wODMgMS40NDZjLTUuMzY0IDAtOS43MjctNC4zNTQtOS43MjctOS43MDZzNC4zNjMtOS43MDYgOS43MjctOS43MDZjNS4zNjUgMCA5LjcyOSA0LjM1NCA5LjcyOSA5LjcwNmE5LjYgOS42IDAgMCAxLS45MjEgNC4wOTV6TTE3LjY5NyAyMy41MzhjMCAuNDAxLjAyMy44LjA3IDEuMTg1YS45OTcuOTk3IDAgMCAxLS44MDYgMS4xMDFDMTUuMDg0IDI2LjMwOCAxMiAyNy43NzIgMTIgMzIuMTU3YzAgMy4zMjMgMS44MzYgNS4xNTcgMy4zNzcgNi4xMS42NzIuNDIzIDEuMjYzLjYzOCAxLjc2MS42NDNoOC45ODl2MS45OTZoLTljLS44ODQtLjAxLTEuODI3LS4zMjktMi44MS0uOTQ3QzEyLjcwOCAzOC45NjQgMTAgMzYuNjIgMTAgMzIuMTU3YzAtNS4yNyAzLjUyNi03LjI5MyA1LjcxLTguMDRhMTQgMTQgMCAwIDEtLjAxMy0uNTc5YzAtNC4zNzggMi45NzYtOC45MTYgNi45MjQtMTAuNTYgNC42MTEtMS45MjcgOS40OTgtLjk3MSAxMy4wNjYgMi41NTYgMS4wNDcgMS4wMzMgMS45MTcgMi4yNzQgMi41OTggMy43MDJhNS4zIDUuMyAwIDAgMSAzLjE3NC0xLjA2MWMyLjQxNSAwIDUuMTI4IDEuNzkzIDUuNjYzIDUuNzE1QzUwLjU4IDI0LjcyMiA1NCAyNy4yNzggNTQgMzIuMjE3YzAgMi44OS0xLjEzNiA1LjI0LTMuMjg3IDYuNzkybC0xLjE3Mi0xLjYxNkM1MS4xNzMgMzYuMjE0IDUyIDM0LjQ3MyA1MiAzMi4yMTdjMC00Ljk3OC00LjE4OS02LjIxNy01Ljk5LTYuNTE5YS45OTYuOTk2IDAgMCAxLS44MjQtMS4xMjdjLS4yNTUtMy4wNC0yLjA0NS00LjQwMS0zLjcyNy00LjQwMS0xLjA1NyAwLTIuMDUuNTE2LTIuNzI1IDEuNDE2YS45OTkuOTk5IDAgMCAxLTEuNzQxLS4yNmMtLjYzNC0xLjc1Mi0xLjU0Ny0zLjIyMy0yLjcxMi00LjM3NS0xLjQzLTEuNDExLTUuMzQ4LTQuNDQ0LTEwLjg5LTIuMTMyLTMuMTkzIDEuMzMtNS42OTQgNS4xNi01LjY5NCA4LjcyIi8+PC9nPjwvc3ZnPg==" alt="Amazon CloudWatch"></div>
+                    <div>
+                        <h3 class="card-title">Amazon CloudWatch</h3>
+                        <span class="card-subtitle">Monitoreo y Alarmas</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-01: Latencia</span>
+                        <span class="badge badge-req">CT-09: Alarma en vivo</span>
+                        <span class="badge badge-topic">Tema 20: Observabilidad</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>La observabilidad es la capacidad de entender qué ocurre dentro de un sistema a partir de sus salidas: <strong>logs</strong> (eventos), <strong>métricas</strong> (valores numéricos en el tiempo) y trazas. CloudWatch centraliza logs y métricas de AWS y dispara <strong>alarmas</strong> cuando una métrica cruza un umbral, por ejemplo la latencia p95.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>sistema de observabilidad</strong>. Recopila logs de Lambda, Airflow, Spark y FastAPI. Monitorea la latencia p95 y dispara alarmas si el Consumer se detiene o si la API supera los 250ms.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja-Media</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Datadog):</strong> Nativo de AWS, sin coste de integración.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $11.09/mes (20 GB de logs, 10 alarmas)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Son las cámaras de seguridad y el sistema de alarmas de la empresa.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHRpdGxlPkljb24tQXJjaGl0ZWN0dXJlLzQ4L0FyY2hfQVdTLUNsb3VkVHJhaWxfNDg8L3RpdGxlPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZmlsbD0iI2U3MTU3YiIgZD0iTTAgMGg2NHY2NEgweiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yMCA0MS45NzRoM1YzOS45NmgtM3ptMi00LjAyNmg2di0yLjAxM2gtNnptMjQuOTYtNy44ODRjLS4yMjYtMi4zMzUtMS40MDQtNC4wNS0zLjI0OC00LjY3Mi0xLjQ3NC0uNDk1LTMuMDgzLS4xOTMtNC4zNjEuNzQ0LS42ODUtMS40NDMtMS42NjMtMy4wMjQtMi42NDktNC4wMDMtMy4yMy0zLjIwOC02Ljk2MS0zLjk1OC0xMS4wODYtMi4yMjUtMy4zNTcgMS40MDQtNi4yMjcgNS41MDItNi41OCA5LjIzMi0xLjg0Ni42NTQtNC4wMjggMi4xMDEtNC45NjIgNC40MDFsMS44NTIuNzYxYy43MjctMS43OSAyLjY5NC0zLjAxMyA0LjMyMS0zLjQzMS40NDMtLjExNC43NTMtLjUxNi43NTMtLjk3NSAwLTMuMDc2IDIuNTY2LTYuOTUgNS4zODUtOC4xMyAzLjQwNC0xLjQzIDYuMjM4LS44NTcgOC45MTMgMS44IDEuMDYxIDEuMDUzIDIuMjM3IDMuMTk1IDIuNzYyIDQuNjU4YTEgMSAwIDAgMCAuNzkyLjY1NC45OC45OCAwIDAgMCAuOTQ3LS4zOWMuODE3LTEuMDk0IDIuMTMtMS41NyAzLjI3OS0xLjE4NiAxLjIyMi40MSAxLjkyMiAxLjcyMyAxLjkyMiAzLjYgMCAuNDkyLjM1NC45MTIuODM2Ljk5MiA0LjA5LjY4NSA2LjE2NCAyLjcyMSA2LjE2NCA2LjA1NCAwIDUuODMzLTUuMzg5IDYuMDM1LTYgNi4wMzlIMjlWNDZoMTdjMi43NjcgMCA4LTEuNjgzIDgtOC4wNTIgMC00LjEwNi0yLjQ5MS02Ljg4Mi03LjA0LTcuODg0TTIyIDQ2aDR2LTIuMDEzaC00em0zLTQuMDI2aDExVjM5Ljk2SDI1em0tMTQgMGg3VjM5Ljk2aC03em0yLTQuMDI2aDZ2LTIuMDEzaC02ek0xNCA0Nmg2di0yLjAxM2gtNnptLTQgMGgydi0yLjAxM2gtMnoiLz48L2c+PC9zdmc+" alt="AWS CloudTrail"></div>
+                    <div>
+                        <h3 class="card-title">AWS CloudTrail</h3>
+                        <span class="card-subtitle">Auditoría</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="badge badge-req">RNF-06: Auditoría</span>
+                        <span class="badge badge-topic">Tema 5: AWS Fundamentos</span>
+                    </div>
+                    <div class="concept"><span class="concept-label"><i class="fa-solid fa-book-open"></i> Concepto</span><p>CloudTrail registra cada llamada a la API de AWS en la cuenta: quién la hizo, desde dónde, cuándo y sobre qué recurso. Es el rastro de auditoría para seguridad y cumplimiento, y permite investigar cambios no autorizados en la infraestructura.</p></div>
+                    <p><strong>Rol clave:</strong> Es el <strong>registro notarial</strong>. Guarda un historial de quién hizo qué en la cuenta AWS (quién creó un bucket, quién modificó un rol IAM). Esencial para cumplimiento y seguridad.</p>
+                    <p><span class="badge badge-importance">Importancia: Alta</span> <span class="badge badge-complexity">Complejidad: Baja</span></p>
+                    <p><strong>Ventajas vs. Alternativas (Logs manuales):</strong> Automático, inmutable, integrado con CloudWatch.</p>
+                    <span class="cost-note"><i class="fa-solid fa-dollar-sign"></i> Costo: $0.00 (Free Tier 1er trail)</span>
+                    <div class="analogy"><i class="fa-solid fa-lightbulb"></i> <strong>Analogía:</strong> Es el libro de actas de la empresa: registra cada decisión para futuras auditorías.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- RESUMEN DE COSTOS VERIFICADOS -->
+    <section class="layer-section">
+        <h2 class="layer-title" style="border-color:#2c3e50; color:#2c3e50;"><i class="fa-solid fa-calculator"></i> Resumen de costos verificados en AWS Pricing Calculator</h2>
+        <div class="glossary-grid">
+            <div class="card" style="grid-column: 1 / -1;">
+                <div class="card-body">
+                    <p>Estimación generada el 05/10/2026 en la región <strong>US East (Ohio) — us-east-2</strong>, 22 servicios. Fuente: export oficial de la AWS Pricing Calculator (<em>Costs_Report_AWS_Calc.pdf</em>).</p>
+                    <table style="width:100%; border-collapse: collapse; font-size: 0.9em;">
+                        <tr style="background:#f1f1f1; text-align:left;">
+                            <th style="padding:8px; border-bottom:2px solid #ddd;">Servicio</th>
+                            <th style="padding:8px; border-bottom:2px solid #ddd;">Costo mensual</th>
+                        </tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon Route 53</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$0.90</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS WAF</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$23.54</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Elastic Load Balancing (ALB)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$18.77</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon VPC (NAT Gateway)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$35.10</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Fargate · FastAPI</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$72.08</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Fargate · Event consumer</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$36.04</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Fargate · Seed y simuladores</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$18.02</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Fargate · Seed job (ad-hoc)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$1.48</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Fargate · Spark (Spot, descuento manual aplicado)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$17.47*</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon EC2 + EBS (RabbitMQ + Airflow, host único)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$68.74</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon RDS PostgreSQL (Multi-AZ)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$117.17</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon S3 (Data Lake)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$4.30</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Glue (crawlers, 30 runs × 10 min)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$4.40**</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon Athena</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$0.98</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Lambda</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$0.00</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon VPC (Public IPv4, 3 direcciones)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$10.95</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS KMS</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$2.00</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Secrets Manager</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$3.20</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon CloudWatch</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$11.09</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon QuickSight (1 Autor + 4 Lectores)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$36.00</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">Amazon ECR</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$0.50</td></tr>
+                        <tr><td style="padding:6px 8px; border-bottom:1px solid #eee;">AWS Data Transfer (50 GB salientes)</td><td style="padding:6px 8px; border-bottom:1px solid #eee;">$4.50</td></tr>
+                        <tr style="background:#eafaf1; font-weight:bold;">
+                            <td style="padding:8px;">Total verificado (producción, 22 servicios)</td>
+                            <td style="padding:8px;">$487.23/mes</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top:15px; font-size:0.85em; color:#7f8c8d;">* Spark en Fargate Spot: la AWS Pricing Calculator no modela directamente tarifas Spot para Fargate. El valor de $17.47 corresponde a la tarifa On-Demand equivalente; aplicando el descuento típico de Spot (~70%) el costo real esperado baja a ~$5.24/mes, cifra usada en las tarjetas individuales de esta capa.</p>
+                    <p style="font-size:0.85em; color:#7f8c8d;">** Glue crawlers: la AWS Pricing Calculator no permite configurar 30 ejecuciones mensuales de 10 minutos, por lo que el valor de la calculadora ($0.15) no refleja el uso esperado. Se reemplazó por el cálculo manual: 2 DPU × (10/60) h × $0.44/DPU-h × 30 runs = <strong>$4.40/mes</strong>. El Data Catalog queda dentro del Free Tier.</p>
+                    <p style="font-size:0.85em; color:#7f8c8d;"><strong>Pendiente de verificar:</strong> Staging VPC (~$40/mes estimado, no confirmado todavía en la calculadora). Al confirmarse, el total de producción + staging rondaría los <strong>~$527/mes</strong>.</p>
+                    <p style="font-size:0.85em; color:#7f8c8d;"><strong>Nota de corrección:</strong> esta versión del glosario corrige un conteo duplicado presente en una versión anterior, donde el host EC2 compartido de RabbitMQ y Airflow ($68.74/mes) aparecía contado hasta tres veces (una vez por servicio, más la tarjeta del host). El costo real de ese host se factura una sola vez y ahora se referencia, no se repite, desde las tarjetas de RabbitMQ y Airflow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
